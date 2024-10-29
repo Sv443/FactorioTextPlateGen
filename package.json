@@ -1,0 +1,16 @@
+{
+  "name": "factoriotextplategen",
+  "type": "module",
+  "version": "0.1.0",
+  "description": "Generates a Factorio text plate blueprint for the given text. Requires the text plates mod.",
+  "main": "src/index.ts",
+  "scripts": {
+    "start": "tsx src/index.ts"
+  },
+  "author": "Sv443",
+  "license": "MIT",
+  "dependencies": {
+    "@types/node": "^22.8.4",
+    "tsx": "^4.19.2"
+  }
+}

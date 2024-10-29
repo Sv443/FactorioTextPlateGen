@@ -1,0 +1,363 @@
+{
+  "WildCard": {
+    "char": "WildCard",
+    "variant": 1
+  },
+  "Square": {
+    "char": "■",
+    "replacements": ["□", "⬛", "⬜"],
+    "variant": 2
+  },
+  "A": {
+    "char": "A",
+    "replacements": ["a"],
+    "variant": 3
+  },
+  "B": {
+    "char": "B",
+    "replacements": ["b"],
+    "variant": 4
+  },
+  "C": {
+    "char": "C",
+    "replacements": ["c"],
+    "variant": 5
+  },
+  "D": {
+    "char": "D",
+    "replacements": ["d"],
+    "variant": 6
+  },
+  "E": {
+    "char": "E",
+    "replacements": ["e"],
+    "variant": 7
+  },
+  "F": {
+    "char": "F",
+    "replacements": ["f"],
+    "variant": 8
+  },
+  "G": {
+    "char": "G",
+    "replacements": ["g"],
+    "variant": 9
+  },
+  "H": {
+    "char": "H",
+    "replacements": ["h"],
+    "variant": 10
+  },
+  "I": {
+    "char": "I",
+    "replacements": ["i"],
+    "variant": 11
+  },
+  "J": {
+    "char": "J",
+    "replacements": ["j"],
+    "variant": 12
+  },
+  "K": {
+    "char": "K",
+    "replacements": ["k"],
+    "variant": 13
+  },
+  "L": {
+    "char": "L",
+    "replacements": ["l"],
+    "variant": 14
+  },
+  "M": {
+    "char": "M",
+    "replacements": ["m"],
+    "variant": 15
+  },
+  "N": {
+    "char": "N",
+    "replacements": ["n"],
+    "variant": 16
+  },
+  "O": {
+    "char": "O",
+    "replacements": ["o"],
+    "variant": 17
+  },
+  "P": {
+    "char": "P",
+    "replacements": ["p"],
+    "variant": 18
+  },
+  "Q": {
+    "char": "Q",
+    "replacements": ["q"],
+    "variant": 19
+  },
+  "R": {
+    "char": "R",
+    "replacements": ["r"],
+    "variant": 20
+  },
+  "S": {
+    "char": "S",
+    "replacements": ["s"],
+    "variant": 21
+  },
+  "T": {
+    "char": "T",
+    "replacements": ["t"],
+    "variant": 22
+  },
+  "U": {
+    "char": "U",
+    "replacements": ["u"],
+    "variant": 23
+  },
+  "V": {
+    "char": "V",
+    "replacements": ["v"],
+    "variant": 24
+  },
+  "W": {
+    "char": "W",
+    "replacements": ["w"],
+    "variant": 25
+  },
+  "X": {
+    "char": "X",
+    "replacements": ["x"],
+    "variant": 26
+  },
+  "Y": {
+    "char": "Y",
+    "replacements": ["y"],
+    "variant": 27
+  },
+  "Z": {
+    "char": "Z",
+    "replacements": ["z"],
+    "variant": 28
+  },
+  "0": {
+    "char": "0",
+    "variant": 29
+  },
+  "1": {
+    "char": "1",
+    "variant": 30
+  },
+  "2": {
+    "char": "2",
+    "variant": 31
+  },
+  "3": {
+    "char": "3",
+    "variant": 32
+  },
+  "4": {
+    "char": "4",
+    "variant": 33
+  },
+  "5": {
+    "char": "5",
+    "variant": 34
+  },
+  "6": {
+    "char": "6",
+    "variant": 35
+  },
+  "7": {
+    "char": "7",
+    "variant": 36
+  },
+  "8": {
+    "char": "8",
+    "variant": 37
+  },
+  "9": {
+    "char": "9",
+    "variant": 38
+  },
+  "ArrowNorth": {
+    "char": "↑",
+    "replacements": ["⬆️", "↑️", "⇧"],
+    "variant": 39
+  },
+  "ArrowSouth": {
+    "char": "↓",
+    "replacements": ["⬇️", "↓️", "⇩"],
+    "variant": 40
+  },
+  "ArrowWest": {
+    "char": "←",
+    "replacements": ["⬅️", "←️", "⇦"],
+    "variant": 41
+  },
+  "ArrowEast": {
+    "char": "→",
+    "replacements": ["➡️", "→️", "⇨"],
+    "variant": 42
+  },
+  "ArrowNorthWest": {
+    "char": "↖",
+    "replacements": ["↖️", "⬉️", "⇖"],
+    "variant": 43
+  },
+  "ArrowNorthEast": {
+    "char": "↗",
+    "replacements": ["↗️", "⬈️", "⇗"],
+    "variant": 44
+  },
+  "ArrowSouthWest": {
+    "char": "↙",
+    "replacements": ["↙️", "⬋️", "⇙"],
+    "variant": 45
+  },
+  "ArrowSouthEast": {
+    "char": "↘",
+    "replacements": ["↘️", "⬊️", "⇘"],
+    "variant": 46
+  },
+  "BracketLeft": {
+    "char": "(",
+    "variant": 47
+  },
+  "BracketRight": {
+    "char": ")",
+    "variant": 48
+  },
+  "SquareBracketLeft": {
+    "char": "[",
+    "variant": 49
+  },
+  "SquareBracketRight": {
+    "char": "]",
+    "variant": 50
+  },
+  "CurlyBracketLeft": {
+    "char": "{",
+    "variant": 51
+  },
+  "CurlyBracketRight": {
+    "char": "}",
+    "variant": 52
+  },
+  "GreaterThan": {
+    "char": ">",
+    "variant": 53
+  },
+  "LessThan": {
+    "char": "<",
+    "variant": 54
+  },
+  "Hat": {
+    "char": "^",
+    "replacements": ["ˆ"],
+    "variant": 55
+  },
+  "Equals": {
+    "char": "=",
+    "variant": 56
+  },
+  "Minus": {
+    "char": "-",
+    "replacements": ["−", "–", "—"],
+    "variant": 57
+  },
+  "Plus": {
+    "char": "+",
+    "variant": 58
+  },
+  "Multiply": {
+    "char": "*",
+    "replacements": ["×"],
+    "variant": 59
+  },
+  "Divide": {
+    "char": "/",
+    "replacements": ["\\"],
+    "variant": 60
+  },
+  "Percent": {
+    "char": "%",
+    "variant": 61
+  },
+  "Ampersand": {
+    "char": "&",
+    "variant": 62
+  },
+  "Pipe": {
+    "char": "|",
+    "replacements": ["│"],
+    "variant": 63
+  },
+  "Exclamation": {
+    "char": "!",
+    "replacements": ["¡", "ǃ"],
+    "variant": 64
+  },
+  "Question": {
+    "char": "?",
+    "replacements": ["¿", "ʔ"],
+    "variant": 65
+  },
+  "Colon": {
+    "char": ":",
+    "variant": 66
+  },
+  "Semicolon": {
+    "char": ";",
+    "replacements": [";"],
+    "variant": 67
+  },
+  "Period": {
+    "char": ".",
+    "variant": 68
+  },
+  "Comma": {
+    "char": ",",
+    "replacements": ["‚"],
+    "variant": 69
+  },
+  "SingleQuoteLeft": {
+    "char": "‘",
+    "variant": 70
+  },
+  "SingleQuoteRight": {
+    "char": "’",
+    "replacements": ["'"],
+    "variant": 71
+  },
+  "DoubleQuotesLeft": {
+    "char": "“",
+    "replacements": ["\""],
+    "variant": 72
+  },
+  "DoubleQuotesRight": {
+    "char": "”",
+    "variant": 73
+  },
+  "At": {
+    "char": "@",
+    "variant": 74
+  },
+  "Hash": {
+    "char": "#",
+    "variant": 75
+  },
+  "Circle": {
+    "char": "●",
+    "replacements": ["⚫", "⬤"],
+    "variant": 76
+  },
+  "Ring": {
+    "char": "○",
+    "replacements": ["⚪", "⭕"],
+    "variant": 77
+  },
+  "Cog": {
+    "char": "⚙",
+    "replacements": ["⚙️"],
+    "variant": 78
+  }
+}

@@ -1,0 +1,79 @@
+{
+    "blueprint": {
+        "icons": [
+            {
+                "signal": {
+                    "name": "textplate-small-copper"
+                },
+                "index": 1
+            }
+        ],
+        "entities": [
+            {
+                "entity_number": 2,
+                "name": "textplate-small-copper",
+                "position": {
+                    "x": -91.5,
+                    "y": 231.5
+                },
+                "variation": 3
+            },
+            {
+                "entity_number": 1,
+                "name": "textplate-small-copper",
+                "position": {
+                    "x": -90.5,
+                    "y": 231.5
+                },
+                "variation": 4
+            },
+            {
+                "entity_number": 4,
+                "name": "textplate-small-copper",
+                "position": {
+                    "x": -89.5,
+                    "y": 231.5
+                },
+                "variation": 5
+            },
+            {
+                "entity_number": 3,
+                "name": "textplate-small-copper",
+                "position": {
+                    "x": -88.5,
+                    "y": 231.5
+                },
+                "variation": 6
+            },
+            {
+                "entity_number": 6,
+                "name": "textplate-small-copper",
+                "position": {
+                    "x": -87.5,
+                    "y": 231.5
+                },
+                "variation": 7
+            },
+            {
+                "entity_number": 5,
+                "name": "textplate-small-copper",
+                "position": {
+                    "x": -86.5,
+                    "y": 231.5
+                },
+                "variation": 8
+            },
+            {
+                "entity_number": 7,
+                "name": "textplate-small-copper",
+                "position": {
+                    "x": -85.5,
+                    "y": 231.5
+                },
+                "variation": 9
+            }
+        ],
+        "item": "blueprint",
+        "version": 562949954207746
+    }
+}
