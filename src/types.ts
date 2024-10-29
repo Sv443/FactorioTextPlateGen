@@ -21,3 +21,16 @@ export type FactorioBP = {
     version: number;
   }
 };
+
+export type TextPlateSize = "small" | "large";
+
+export type TextPlateMaterial =
+  | "concrete"
+  | "copper"
+  | "glass"
+  | "gold"
+  | "iron"
+  | "plastic"
+  | "steel"
+  | "stone"
+  | "uranium";

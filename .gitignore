@@ -1,3 +1,7 @@
 node_modules/
 dist/
 .env
+input.txt
+output.txt
+output.json
+.text-plate-settings.json

@@ -1,7 +1,340 @@
-import { decodeBpString } from "./compression.js";
+import { access, constants as fsconstants, readFile, writeFile } from "node:fs/promises";
+import prompt from "prompts";
+import { decodeBp, encodeBp } from "./compression.js";
+import { createTextPlateBp, defaultGenerateTextPlateBpSettings, type GenerateTextPlateBpSettings } from "./generator.js";
+import { TextPlateSize, type TextPlateMaterial } from "./types.ts";
 
-async function run() {
-  console.log(await decodeBpString(`0eNqlm91u20gMhd9F124xfxzO5FUWxcJthUKA4wS2u2gR+N1XuwHSC9EDnqO7JHB0wBkd8iPDvE1fTz/n18tyvk1Pb9Py7eV8nZ7+epuuy4/z8fTfz87H53l6mm7zr9vr6XibP12fj6fTp+Xycp7uh2k5f59/TU/x/uUwzefbclvm9yf8/83vv88/n7/Ol/UDh+GTDtPry3X95fXLVXN9YMmf5TD9Xn+xx8+yCv1zvCzH9w/EeD9sBBIqUB4LpGQIZFRABxGoIVBQgfpYoBvPF/T5fRBAMAQqKCBxIFAMAUUFwmOBbDy/oc9PYAAdFRi4wHqFYkAF5LGAFUBEfSwDFyTrJYqokaWCZ4QaWRoaAupkGTgtmTGgXq4RTEYRNXNN6Cmhbq6CuTmidq4FTHgR9XNVMGEk1NC1ogqoo2tHFVBH14Y5OqGO1kFdSNarlFBH68hvFl0k1NGawZc1oY7WhPktKc94eRNCsxQaD3nZR5Goo4s8VhCLIgNPedsQrGvIMGq3xwpm9cmJJ8nsqj4586SXXY7OhYfV7KpvWXjY89khw8Bd0HtQnid9hsuNB0pnDJ0Hyu1NWzGUwPPeRqFarVuJPLNuT6laCoknyuzqn0vmiTJ7MKCglq4jw1kkU4QnSqdC5YnSd0jKA+U2BKvClcYD5fZNMhU6T2PZQzISeKDMLhiTyMOYz26CGloFTKwCY3cBQUNg7K4gBgiM3SjKCIzdg9RtZW5BHd0CWKMFdXSLYPUR1NFtVBusGGrgmxPxJNYa+c7BJ7Bjwr0RSFbxqZnvTcTFxLXwQ3RxpYy6Y8otLkPXyvdX4pmxVuVbE+chNb69Ek9OqjsG3eL5W4YGvvXxXbNGvvURV9LTHZNucSU9zXxj4spJWvi+xJcxdMekW1xdtMLIPTCD2R+q8p2P7xoa3/mIZ2qlnW98xIWrLfCNj7iQu0W+83HGsGPQ7brnlvnGx3lIhe98fGZoOwbdvszddgy6nQrK91a+i258a+V8VzvfWvkyd99B3OrhpL6DuNV1SH0Hcqur/+w7tkqcMRQeiNXzrnbheVhdSanvWCxRl6G78rzqO6QdqyXqosneeV5V1xgghsADqy+IGCJPrOpbOwiJZ9aNRDMVMs+s3nMqPLT6LBGD8NTqS00xVH4FxHkVyoOr95waT67ec+r8SN2VniK8OFbRJB7h1TEduKKbColHS6fv4OUxTSARRHh7TEeJ3F7igxl89MraEpXnS2c5ghfIdFQrbInGD++dxuv8bN2XAuEVspbQFAjvkLWMVm14iawJ+srCa2StgJcNr5G1iiqgzm4K30Rlh00phM2wyY6CXg01JOy7pou2ofDgnDo7bzIkzEoB75J9YIF1E6ZCZLHAHUNiB06GQrQl6JptSZh3DW+T6cATNhbA62Q68IRd7eB9so+pk19CWfKw7sKWaCx5GBL2PxB0lgqsIEzOhFfKPrDAmwHhlbI2Mp55TvBOWRu4wtw1ivBSWUtggoK3ylpBFeia7fYEvFbW6lDiy2FabvPz+rg//z+4fma+XN9rSU299C4lBdVS7/d/AV+ObLg=`));
+//#region init
+
+type Settings = Required<GenerateTextPlateBpSettings>;
+
+const defaultSettings: Settings = {
+  ...defaultGenerateTextPlateBpSettings,
+};
+
+let settings = { ...defaultSettings };
+
+async function init() {
+  try {
+    settings = JSON.parse(await readFile("settings.json", "utf8")) as Settings;
+  }
+  catch(err) {
+    if(!await exists(".text-plate-settings.json"))
+      await writeFile(".text-plate-settings.json", JSON.stringify(defaultSettings, null, 2), "utf8");
+    else
+      console.error("\n⚠️ \x1b[33mFailed to load settings. Using the defaults.\x1b[0m\n");
+  }
+
+  console.log("\x1b[34mFactorio Text Plate Blueprint Generator\x1b[0m\nby Sv443 - https://github.com/Sv443/FactorioTextPlateGen\n");
+  await showMenu();
 }
 
-run();
+//#region main menu
+
+async function showMenu(): Promise<unknown | void> {
+  if(!process.stdin.isTTY)
+    throw new Error("This script requires a TTY stdin channel (terminal with input capability).");
+
+  const { action } = await prompt({
+    name: "action",
+    type: "select",
+    message: "What do you want to do?",
+    choices: [
+      { title: "Create text plate blueprint from string", value: "createFromString" },
+      { title: "Create text plate blueprint from a file", value: "createFromFile" },
+      { title: "Decode blueprint string", value: "decodeString" },
+      { title: "Decode blueprint file", value: "decodeFile" },
+      { title: "\x1b[33mEdit settings\x1b[0m", value: "editSettings" },
+      { title: "\x1b[31mExit\x1b[0m", value: "exit" },
+    ],
+  });
+
+  switch(action) {
+  //#SECTION createFromString
+  case "createFromString": {
+    const { input } = await prompt({
+      name: "input",
+      type: "text",
+      message: "Enter the text you want to create a blueprint from (\\n for line break, Ctrl+C to cancel):",
+    });
+
+    if(!input)
+      return showMenu();
+
+    const bp = createTextPlateBp(input, settings);
+    const encoded = await encodeBp(bp, 48);
+    await writeFile("output.txt", encoded, "utf8");
+    console.log("\n\x1b[32mBlueprint created and saved to output.txt\x1b[0m\n");
+    await pause();
+    break;
+  }
+  //#SECTION createFromFile
+  case "createFromFile": {
+    let { file } = await prompt({
+      name: "file",
+      type: "text",
+      message: "Enter the path to the file containing the text (default: input.txt):",
+    });
+
+    if(file === undefined)
+      return showMenu();
+
+    if(file.length === 0)
+      file = "input.txt";
+
+    if(!await exists(file)) {
+      console.error("\n\x1b[31mFile not found or no permission to access it.\x1b[0m\n");
+      await pause();
+      break;
+    }
+
+    const input = await readFile(file, "utf8");
+    const bp = createTextPlateBp(input, settings);
+    const encoded = await encodeBp(bp, 48);
+
+    await writeFile("output.txt", encoded, "utf8");
+    console.log("\n\x1b[32mBlueprint created and saved to output.txt\x1b[0m\n");
+    await pause();
+    break;
+  }
+  //#SECTION decodeString
+  case "decodeString": {
+    let { input } = await prompt({
+      name: "input",
+      type: "text",
+      message: "Enter the blueprint string to decode:",
+    });
+
+    if(input === undefined)
+      return showMenu();
+
+    let { outputPath } = await prompt({
+      name: "outputPath",
+      type: "text",
+      message: "Enter the path to save the decoded blueprint (default: output.txt):",
+    });
+
+    if(outputPath === undefined)
+      return showMenu();
+
+    if(outputPath.length === 0)
+      outputPath = "output.txt";
+
+    const decoded = await decodeBp(input);
+
+    if(!decoded) {
+      console.error("\n\x1b[31mFailed to decode blueprint string.\x1b[0m\n");
+      await pause();
+      break;
+    }
+
+    await writeFile(outputPath, JSON.stringify(decoded, null, 2), "utf8");
+    console.log(`\n\x1b[32mBlueprint decoded and saved to ${outputPath}\x1b[0m\n`);
+
+    await pause();
+    break;
+  }
+  //#SECTION decodeFile
+  case "decodeFile": {
+    let { file } = await prompt({
+      name: "file",
+      type: "text",
+      message: "Enter the path to the file containing the blueprint string (default: input.txt):",
+    });
+
+    if(file === undefined)
+      return showMenu();
+
+    if(!file)
+      file = "input.txt";
+
+    if(!await exists(file)) {
+      console.error("\n\x1b[31mFile not found or no permission to access it.\x1b[0m\n");
+      await pause();
+      break;
+    }
+
+    let { outputPath } = await prompt({
+      name: "outputPath",
+      type: "text",
+      message: "Enter the path to save the decoded blueprint (default: output.json):",
+    });
+
+    if(outputPath === undefined)
+      return showMenu();
+
+    if(outputPath.length === 0)
+      outputPath = "output.json";
+
+    const input = await readFile(file, "utf8");
+    const decoded = await decodeBp(input);
+
+    if(!decoded) {
+      console.error("\n\x1b[31mFailed to decode blueprint string.\x1b[0m\n");
+      await pause();
+      break;
+    }
+
+    await writeFile(outputPath, JSON.stringify(decoded, null, 2), "utf8");
+    console.log(`\n\x1b[32mBlueprint decoded and saved to ${outputPath}\x1b[0m\n`);
+
+    await pause();
+    break;
+  }
+  //#SECTION changeSettings
+  case "editSettings":
+    return await showSettingsMenu();
+  //#SECTION default, exit
+  default:
+  case "exit":
+    setImmediate(() => process.exit(0));
+    return;
+  }
+  return showMenu();
+}
+
+//#region settings menu
+
+async function showSettingsMenu(): Promise<unknown | void> {
+  const { setting } = await prompt({
+    name: "setting",
+    type: "select",
+    message: "What setting do you want to change?",
+    choices: [
+      { title: `Plate size: ${settings.size}`, value: "size" },
+      { title: `Plate material: ${settings.material}`, value: "material" },
+      { title: `Line spacing: ${settings.lineSpacing}`, value: "lineSpacing" },
+      { title: "\x1b[31mBack\x1b[0m", value: "back" },
+    ],
+  });
+
+  switch(setting) {
+  //#SECTION size
+  case "size": {
+    const { size } = await prompt({
+      name: "size",
+      type: "select",
+      message: "What size should the text plates be? Ctrl+C to cancel.",
+      choices: [
+        { title: "Small", value: "small" satisfies TextPlateSize },
+        { title: "Large", value: "large" satisfies TextPlateSize },
+      ],
+    });
+
+    if(!size)
+      return showSettingsMenu();
+
+    settings.size = size;
+    await writeFile("settings.json", JSON.stringify(settings, null, 2), "utf8");
+
+    console.log("\n\x1b[32mSettings saved.\x1b[0m\n");
+    break;
+  }
+  //#SECTION material
+  case "material": {
+    const { material } = await prompt({
+      name: "material",
+      type: "select",
+      message: "What material should the text plates be made of? Ctrl+C to cancel.",
+      choices: [
+        { title: "Concrete", value: "concrete" },
+        { title: "Copper", value: "copper" },
+        { title: "Glass", value: "glass" },
+        { title: "Gold", value: "gold" },
+        { title: "Iron", value: "iron" },
+        { title: "Plastic", value: "plastic" },
+        { title: "Steel", value: "steel" },
+        { title: "Stone", value: "stone" },
+        { title: "Uranium", value: "uranium" },
+      ] satisfies { title: string, value: TextPlateMaterial }[],
+    });
+
+    if(!material)
+      return showSettingsMenu();
+
+    settings.material = material;
+    await writeFile("settings.json", JSON.stringify(settings, null, 2), "utf8");
+
+    console.log("\n\x1b[32mSettings saved.\x1b[0m\n");
+    break;
+  }
+  //#SECTION lineSpacing
+  case "lineSpacing": {
+    const { lineSpacing } = await prompt({
+      name: "lineSpacing",
+      type: "number",
+      message: "How many tiles of space should be between lines? Ctrl+C to cancel.",
+    });
+
+    if(!lineSpacing)
+      return showSettingsMenu();
+
+    settings.lineSpacing = lineSpacing;
+    await writeFile("settings.json", JSON.stringify(settings, null, 2), "utf8");
+
+    console.log("\n\x1b[32mSettings saved.\x1b[0m\n");
+    break;
+  }
+  //#SECTION default, back
+  default:
+  case "back":
+    return showMenu();
+  }
+  return showSettingsMenu();
+}
+
+//#region utils
+
+/** Shows a "Press any key to continue..." message and waits for a key press */
+function pause(text?: string) {
+  if(!text || typeof text !== "string")
+    text = "Press any key to continue...";
+
+  const initialRaw = process.stdin.isRaw;
+  process.stdin.setRawMode(true);
+
+  return new Promise((resolve, reject) => {
+    process.stdout.write(`${text} `);
+    process.stdin.resume();
+
+    let onData = (chunk: string) => {
+      if(/\u0003/gu.test(chunk)) // eslint-disable-line no-control-regex
+        process.exit(0);
+
+      process.stdout.write("\n");
+      process.stdin.pause();
+
+      process.stdin.removeListener("data", onData);
+      process.stdin.removeListener("error", onError);
+
+      process.stdin.setRawMode(initialRaw);
+
+      return resolve(chunk.toString());
+    }
+
+    let onError = (err: unknown) => {
+      process.stdin.removeListener("data", onData);
+      process.stdin.removeListener("error", onError);
+
+      process.stdin.setRawMode(initialRaw);
+
+      return reject(err);
+    }
+
+    process.stdin.on("data", onData);
+    process.stdin.on("error", onError);
+  });
+}
+
+/** Checks if a file exists */
+async function exists(path: string) {
+  try {
+    await access(path, fsconstants.W_OK | fsconstants.R_OK);
+    return true;
+  }
+  catch {
+    return false;
+  }
+}
+
+init();
