@@ -2,10 +2,23 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "tsx",
+      "name": "index.ts",
       "type": "node",
       "request": "launch",
       "program": "${workspaceFolder}/src/index.ts",
+      "runtimeExecutable": "tsx",
+      "console": "integratedTerminal",
+      "internalConsoleOptions": "neverOpen",
+      "skipFiles": [
+        "<node_internals>/**",
+        "${workspaceFolder}/node_modules/**"
+      ]
+    },
+    {
+      "name": "test.ts",
+      "type": "node",
+      "request": "launch",
+      "program": "${workspaceFolder}/test.ts",
       "runtimeExecutable": "tsx",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
