@@ -1,0 +1,1330 @@
+{
+  "blueprint": {
+    "item": "blueprint",
+    "version": 562949954207746,
+    "icons": [
+      {
+        "signal": {
+          "name": "textplate-small-iron"
+        },
+        "index": 1
+      }
+    ],
+    "entities": [
+      {
+        "entity_number": 1,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 43.5,
+          "y": 191.5
+        },
+        "variation": 11
+      },
+      {
+        "entity_number": 2,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 44.5,
+          "y": 191.5
+        },
+        "variation": 22
+      },
+      {
+        "entity_number": 3,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 47.5,
+          "y": 191.5
+        },
+        "variation": 17
+      },
+      {
+        "entity_number": 4,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 46.5,
+          "y": 191.5
+        },
+        "variation": 9
+      },
+      {
+        "entity_number": 5,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 49.5,
+          "y": 191.5
+        },
+        "variation": 10
+      },
+      {
+        "entity_number": 6,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 51.5,
+          "y": 191.5
+        },
+        "variation": 14
+      },
+      {
+        "entity_number": 7,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 50.5,
+          "y": 191.5
+        },
+        "variation": 3
+      },
+      {
+        "entity_number": 8,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 52.5,
+          "y": 191.5
+        },
+        "variation": 14
+      },
+      {
+        "entity_number": 9,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 53.5,
+          "y": 191.5
+        },
+        "variation": 7
+      },
+      {
+        "entity_number": 10,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 55.5,
+          "y": 191.5
+        },
+        "variation": 4
+      },
+      {
+        "entity_number": 11,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 57.5,
+          "y": 191.5
+        },
+        "variation": 20
+      },
+      {
+        "entity_number": 12,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 56.5,
+          "y": 191.5
+        },
+        "variation": 7
+      },
+      {
+        "entity_number": 13,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 58.5,
+          "y": 191.5
+        },
+        "variation": 20
+      },
+      {
+        "entity_number": 14,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 59.5,
+          "y": 191.5
+        },
+        "variation": 27
+      },
+      {
+        "entity_number": 15,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 61.5,
+          "y": 191.5
+        },
+        "variation": 17
+      },
+      {
+        "entity_number": 16,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 62.5,
+          "y": 191.5
+        },
+        "variation": 20
+      },
+      {
+        "entity_number": 17,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 65.5,
+          "y": 191.5
+        },
+        "variation": 3
+      },
+      {
+        "entity_number": 18,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 64.5,
+          "y": 191.5
+        },
+        "variation": 10
+      },
+      {
+        "entity_number": 19,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 67.5,
+          "y": 191.5
+        },
+        "variation": 14
+      },
+      {
+        "entity_number": 20,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 66.5,
+          "y": 191.5
+        },
+        "variation": 14
+      },
+      {
+        "entity_number": 21,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 69.5,
+          "y": 191.5
+        },
+        "variation": 14
+      },
+      {
+        "entity_number": 22,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 68.5,
+          "y": 191.5
+        },
+        "variation": 7
+      },
+      {
+        "entity_number": 23,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 70.5,
+          "y": 191.5
+        },
+        "variation": 23
+      },
+      {
+        "entity_number": 24,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 71.5,
+          "y": 191.5
+        },
+        "variation": 12
+      },
+      {
+        "entity_number": 25,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 73.5,
+          "y": 191.5
+        },
+        "variation": 10
+      },
+      {
+        "entity_number": 26,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 72.5,
+          "y": 191.5
+        },
+        "variation": 3
+      },
+      {
+        "entity_number": 27,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 43.5,
+          "y": 193.5
+        },
+        "variation": 18
+      },
+      {
+        "entity_number": 28,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 44.5,
+          "y": 193.5
+        },
+        "variation": 11
+      },
+      {
+        "entity_number": 29,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 45.5,
+          "y": 193.5
+        },
+        "variation": 5
+      },
+      {
+        "entity_number": 30,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 46.5,
+          "y": 193.5
+        },
+        "variation": 13
+      },
+      {
+        "entity_number": 31,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 48.5,
+          "y": 193.5
+        },
+        "variation": 27
+      },
+      {
+        "entity_number": 32,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 49.5,
+          "y": 193.5
+        },
+        "variation": 17
+      },
+      {
+        "entity_number": 33,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 50.5,
+          "y": 193.5
+        },
+        "variation": 23
+      },
+      {
+        "entity_number": 34,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 51.5,
+          "y": 193.5
+        },
+        "variation": 20
+      },
+      {
+        "entity_number": 35,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 53.5,
+          "y": 193.5
+        },
+        "variation": 18
+      },
+      {
+        "entity_number": 36,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 54.5,
+          "y": 193.5
+        },
+        "variation": 17
+      },
+      {
+        "entity_number": 37,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 55.5,
+          "y": 193.5
+        },
+        "variation": 11
+      },
+      {
+        "entity_number": 38,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 57.5,
+          "y": 193.5
+        },
+        "variation": 17
+      },
+      {
+        "entity_number": 39,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 56.5,
+          "y": 193.5
+        },
+        "variation": 21
+      },
+      {
+        "entity_number": 40,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 59.5,
+          "y": 193.5
+        },
+        "variation": 69
+      },
+      {
+        "entity_number": 41,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 58.5,
+          "y": 193.5
+        },
+        "variation": 16
+      },
+      {
+        "entity_number": 42,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 61.5,
+          "y": 193.5
+        },
+        "variation": 22
+      },
+      {
+        "entity_number": 43,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 62.5,
+          "y": 193.5
+        },
+        "variation": 7
+      },
+      {
+        "entity_number": 44,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 63.5,
+          "y": 193.5
+        },
+        "variation": 14
+      },
+      {
+        "entity_number": 45,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 64.5,
+          "y": 193.5
+        },
+        "variation": 14
+      },
+      {
+        "entity_number": 46,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 67.5,
+          "y": 193.5
+        },
+        "variation": 7
+      },
+      {
+        "entity_number": 47,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 66.5,
+          "y": 193.5
+        },
+        "variation": 15
+      },
+      {
+        "entity_number": 48,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 69.5,
+          "y": 193.5
+        },
+        "variation": 25
+      },
+      {
+        "entity_number": 49,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 71.5,
+          "y": 193.5
+        },
+        "variation": 3
+      },
+      {
+        "entity_number": 50,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 70.5,
+          "y": 193.5
+        },
+        "variation": 10
+      },
+      {
+        "entity_number": 51,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 72.5,
+          "y": 193.5
+        },
+        "variation": 22
+      },
+      {
+        "entity_number": 52,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 75.5,
+          "y": 193.5
+        },
+        "variation": 17
+      },
+      {
+        "entity_number": 53,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 74.5,
+          "y": 193.5
+        },
+        "variation": 27
+      },
+      {
+        "entity_number": 54,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 76.5,
+          "y": 193.5
+        },
+        "variation": 23
+      },
+      {
+        "entity_number": 55,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 79.5,
+          "y": 193.5
+        },
+        "variation": 17
+      },
+      {
+        "entity_number": 56,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 78.5,
+          "y": 193.5
+        },
+        "variation": 6
+      },
+      {
+        "entity_number": 57,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 80.5,
+          "y": 193.5
+        },
+        "variation": 11
+      },
+      {
+        "entity_number": 58,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 81.5,
+          "y": 193.5
+        },
+        "variation": 16
+      },
+      {
+        "entity_number": 59,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 82.5,
+          "y": 193.5
+        },
+        "variation": 71
+      },
+      {
+        "entity_number": 60,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 43.5,
+          "y": 195.5
+        },
+        "variation": 7
+      },
+      {
+        "entity_number": 61,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 45.5,
+          "y": 195.5
+        },
+        "variation": 7
+      },
+      {
+        "entity_number": 62,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 44.5,
+          "y": 195.5
+        },
+        "variation": 24
+      },
+      {
+        "entity_number": 63,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 46.5,
+          "y": 195.5
+        },
+        "variation": 20
+      },
+      {
+        "entity_number": 64,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 47.5,
+          "y": 195.5
+        },
+        "variation": 27
+      },
+      {
+        "entity_number": 65,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 49.5,
+          "y": 195.5
+        },
+        "variation": 17
+      },
+      {
+        "entity_number": 66,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 48.5,
+          "y": 195.5
+        },
+        "variation": 4
+      },
+      {
+        "entity_number": 67,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 51.5,
+          "y": 195.5
+        },
+        "variation": 27
+      },
+      {
+        "entity_number": 68,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 50.5,
+          "y": 195.5
+        },
+        "variation": 6
+      },
+      {
+        "entity_number": 69,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 53.5,
+          "y": 195.5
+        },
+        "variation": 9
+      },
+      {
+        "entity_number": 70,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 54.5,
+          "y": 195.5
+        },
+        "variation": 17
+      },
+      {
+        "entity_number": 71,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 55.5,
+          "y": 195.5
+        },
+        "variation": 16
+      },
+      {
+        "entity_number": 72,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 56.5,
+          "y": 195.5
+        },
+        "variation": 71
+      },
+      {
+        "entity_number": 73,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 59.5,
+          "y": 195.5
+        },
+        "variation": 7
+      },
+      {
+        "entity_number": 74,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 58.5,
+          "y": 195.5
+        },
+        "variation": 20
+      },
+      {
+        "entity_number": 75,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 61.5,
+          "y": 195.5
+        },
+        "variation": 18
+      },
+      {
+        "entity_number": 76,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 60.5,
+          "y": 195.5
+        },
+        "variation": 21
+      },
+      {
+        "entity_number": 77,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 62.5,
+          "y": 195.5
+        },
+        "variation": 7
+      },
+      {
+        "entity_number": 78,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 63.5,
+          "y": 195.5
+        },
+        "variation": 5
+      },
+      {
+        "entity_number": 79,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 64.5,
+          "y": 195.5
+        },
+        "variation": 22
+      },
+      {
+        "entity_number": 80,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 67.5,
+          "y": 195.5
+        },
+        "variation": 10
+      },
+      {
+        "entity_number": 81,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 66.5,
+          "y": 195.5
+        },
+        "variation": 22
+      },
+      {
+        "entity_number": 82,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 68.5,
+          "y": 195.5
+        },
+        "variation": 7
+      },
+      {
+        "entity_number": 83,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 71.5,
+          "y": 195.5
+        },
+        "variation": 10
+      },
+      {
+        "entity_number": 84,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 70.5,
+          "y": 195.5
+        },
+        "variation": 21
+      },
+      {
+        "entity_number": 85,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 73.5,
+          "y": 195.5
+        },
+        "variation": 17
+      },
+      {
+        "entity_number": 86,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 72.5,
+          "y": 195.5
+        },
+        "variation": 17
+      },
+      {
+        "entity_number": 87,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 75.5,
+          "y": 195.5
+        },
+        "variation": 7
+      },
+      {
+        "entity_number": 88,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 74.5,
+          "y": 195.5
+        },
+        "variation": 22
+      },
+      {
+        "entity_number": 89,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 76.5,
+          "y": 195.5
+        },
+        "variation": 20
+      },
+      {
+        "entity_number": 90,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 43.5,
+          "y": 197.5
+        },
+        "variation": 4
+      },
+      {
+        "entity_number": 91,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 45.5,
+          "y": 197.5
+        },
+        "variation": 22
+      },
+      {
+        "entity_number": 92,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 44.5,
+          "y": 197.5
+        },
+        "variation": 23
+      },
+      {
+        "entity_number": 93,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 47.5,
+          "y": 197.5
+        },
+        "variation": 22
+      },
+      {
+        "entity_number": 94,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 49.5,
+          "y": 197.5
+        },
+        "variation": 7
+      },
+      {
+        "entity_number": 95,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 48.5,
+          "y": 197.5
+        },
+        "variation": 10
+      },
+      {
+        "entity_number": 96,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 51.5,
+          "y": 197.5
+        },
+        "variation": 17
+      },
+      {
+        "entity_number": 97,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 53.5,
+          "y": 197.5
+        },
+        "variation": 7
+      },
+      {
+        "entity_number": 98,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 52.5,
+          "y": 197.5
+        },
+        "variation": 16
+      },
+      {
+        "entity_number": 99,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 55.5,
+          "y": 197.5
+        },
+        "variation": 11
+      },
+      {
+        "entity_number": 100,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 56.5,
+          "y": 197.5
+        },
+        "variation": 16
+      },
+      {
+        "entity_number": 101,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 59.5,
+          "y": 197.5
+        },
+        "variation": 20
+      },
+      {
+        "entity_number": 102,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 58.5,
+          "y": 197.5
+        },
+        "variation": 8
+      },
+      {
+        "entity_number": 103,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 61.5,
+          "y": 197.5
+        },
+        "variation": 16
+      },
+      {
+        "entity_number": 104,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 60.5,
+          "y": 197.5
+        },
+        "variation": 17
+      },
+      {
+        "entity_number": 105,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 62.5,
+          "y": 197.5
+        },
+        "variation": 22
+      },
+      {
+        "entity_number": 106,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 65.5,
+          "y": 197.5
+        },
+        "variation": 8
+      },
+      {
+        "entity_number": 107,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 64.5,
+          "y": 197.5
+        },
+        "variation": 17
+      },
+      {
+        "entity_number": 108,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 67.5,
+          "y": 197.5
+        },
+        "variation": 22
+      },
+      {
+        "entity_number": 109,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 69.5,
+          "y": 197.5
+        },
+        "variation": 7
+      },
+      {
+        "entity_number": 110,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 68.5,
+          "y": 197.5
+        },
+        "variation": 10
+      },
+      {
+        "entity_number": 111,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 71.5,
+          "y": 197.5
+        },
+        "variation": 9
+      },
+      {
+        "entity_number": 112,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 73.5,
+          "y": 197.5
+        },
+        "variation": 16
+      },
+      {
+        "entity_number": 113,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 72.5,
+          "y": 197.5
+        },
+        "variation": 23
+      },
+      {
+        "entity_number": 114,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 75.5,
+          "y": 197.5
+        },
+        "variation": 14
+      },
+      {
+        "entity_number": 115,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 77.5,
+          "y": 197.5
+        },
+        "variation": 24
+      },
+      {
+        "entity_number": 116,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 76.5,
+          "y": 197.5
+        },
+        "variation": 11
+      },
+      {
+        "entity_number": 117,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 79.5,
+          "y": 197.5
+        },
+        "variation": 21
+      },
+      {
+        "entity_number": 118,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 78.5,
+          "y": 197.5
+        },
+        "variation": 7
+      },
+      {
+        "entity_number": 119,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 81.5,
+          "y": 197.5
+        },
+        "variation": 8
+      },
+      {
+        "entity_number": 120,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 82.5,
+          "y": 197.5
+        },
+        "variation": 17
+      },
+      {
+        "entity_number": 121,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 83.5,
+          "y": 197.5
+        },
+        "variation": 20
+      },
+      {
+        "entity_number": 122,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 85.5,
+          "y": 197.5
+        },
+        "variation": 24
+      },
+      {
+        "entity_number": 123,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 84.5,
+          "y": 197.5
+        },
+        "variation": 7
+      },
+      {
+        "entity_number": 124,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 86.5,
+          "y": 197.5
+        },
+        "variation": 7
+      },
+      {
+        "entity_number": 125,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 87.5,
+          "y": 197.5
+        },
+        "variation": 20
+      },
+      {
+        "entity_number": 126,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 63.5,
+          "y": 200.5
+        },
+        "variation": 57
+      },
+      {
+        "entity_number": 127,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 65.5,
+          "y": 200.5
+        },
+        "variation": 4
+      },
+      {
+        "entity_number": 128,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 67.5,
+          "y": 200.5
+        },
+        "variation": 20
+      },
+      {
+        "entity_number": 129,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 66.5,
+          "y": 200.5
+        },
+        "variation": 3
+      },
+      {
+        "entity_number": 130,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 69.5,
+          "y": 200.5
+        },
+        "variation": 5
+      },
+      {
+        "entity_number": 131,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 68.5,
+          "y": 200.5
+        },
+        "variation": 3
+      },
+      {
+        "entity_number": 132,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 70.5,
+          "y": 200.5
+        },
+        "variation": 13
+      },
+      {
+        "entity_number": 133,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 72.5,
+          "y": 200.5
+        },
+        "variation": 10
+      },
+      {
+        "entity_number": 134,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 73.5,
+          "y": 200.5
+        },
+        "variation": 23
+      },
+      {
+        "entity_number": 135,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 75.5,
+          "y": 200.5
+        },
+        "variation": 21
+      },
+      {
+        "entity_number": 136,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 74.5,
+          "y": 200.5
+        },
+        "variation": 21
+      },
+      {
+        "entity_number": 137,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 77.5,
+          "y": 200.5
+        },
+        "variation": 11
+      },
+      {
+        "entity_number": 138,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 76.5,
+          "y": 200.5
+        },
+        "variation": 7
+      },
+      {
+        "entity_number": 139,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 78.5,
+          "y": 200.5
+        },
+        "variation": 16
+      },
+      {
+        "entity_number": 140,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 81.5,
+          "y": 200.5
+        },
+        "variation": 4
+      },
+      {
+        "entity_number": 141,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 80.5,
+          "y": 200.5
+        },
+        "variation": 17
+      },
+      {
+        "entity_number": 142,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 83.5,
+          "y": 200.5
+        },
+        "variation": 15
+      },
+      {
+        "entity_number": 143,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 82.5,
+          "y": 200.5
+        },
+        "variation": 3
+      },
+      {
+        "entity_number": 144,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 84.5,
+          "y": 200.5
+        },
+        "variation": 3
+      },
+      {
+        "entity_number": 145,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 87.5,
+          "y": 200.5
+        },
+        "variation": 11
+      },
+      {
+        "entity_number": 146,
+        "name": "textplate-small-iron",
+        "position": {
+          "x": 86.5,
+          "y": 200.5
+        },
+        "variation": 11
+      }
+    ]
+  }
+}
