@@ -1,3 +1,4 @@
+/** See https://wiki.factorio.com/Blueprint_string_format#Json_representation_of_a_blueprint%2Fblueprint_book */
 export type FactorioBP = {
   blueprint: {
     icons: Array<{
