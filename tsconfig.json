@@ -3,7 +3,7 @@
     "baseUrl": ".",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "target": "ESNext",
+    "target": "ES6",
     "outDir": "dist",
     "useDefineForClassFields": true,
     "lib": [
@@ -20,7 +20,6 @@
     "forceConsistentCasingInFileNames": true,
     "importHelpers": true,
     "isolatedModules": true,
-    "moduleDetection": "force",
     "noFallthroughCasesInSwitch": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
@@ -30,7 +29,7 @@
     "strict": true,
   },
   "include": [
-    "src/**/*",
+    "src/**/*"
   ],
   "exclude": [
     "node_modules/**/*",

@@ -1,8 +1,8 @@
 import { access, constants as fsconstants, readFile, writeFile } from "node:fs/promises";
 import prompt from "prompts";
 import { decodeBp, encodeBp } from "./compression.js";
-import { createTextPlateBp, defaultGenerateTextPlateBpSettings, type GenerateTextPlateBpSettings } from "./generator.js";
-import { TextPlateSize, type TextDirection, type TextPlateMaterial } from "./types.js";
+import { createTextPlateBp, defaultGenerateTextPlateBpSettings, GenerateTextPlateBpSettings } from "./generator.js";
+import { TextPlateSize, TextDirection, TextPlateMaterial } from "./types.js";
 import packageJson from "../package.json" with { type: "json" };
 
 //#region init
