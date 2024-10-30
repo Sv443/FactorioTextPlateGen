@@ -61,8 +61,8 @@ export function createTextPlateBp(
         entity_number: entities.length + 1,
         name: `textplate-${size}-${material}`,
         position: {
-          x: (x * sizeMult + 0.5) * textDirMult,
-          y: (y * sizeMult + y * (lineSpacing ?? 0) + 0.5) * textDirMult,
+          x: (x * sizeMult) * textDirMult + 0.5,
+          y: (y * sizeMult + y * (lineSpacing ?? 0)) * textDirMult + 0.5,
         },
         variation: resolveTextPlateVariant(char),
       });
