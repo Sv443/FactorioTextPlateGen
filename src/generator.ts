@@ -29,11 +29,16 @@ export const defaultGenerateTextPlateBpSettings: Required<GenerateTextPlateBpSet
   version: 562949954207746,
 } as const;
 
+/** Regular expression to match disallowed characters */
+export const disallowedCharsRegex = new RegExp(`[^${
+  Object.values(characters).map(ch => ([ch.char, ...("replacements" in ch ? ch.replacements : [])])).join("")
+}]`, "gi");
+
 /** Creates a Factorio blueprint object from the input text with the provided settings */
-export function createTextPlateBp(
-  input: string,
+export async function createTextPlateBp(
+  text: string,
   settings: GenerateTextPlateBpSettings = defaultGenerateTextPlateBpSettings,
-): FactorioBP {
+): Promise<FactorioBP> {
   const {
     size,
     material,
@@ -44,7 +49,10 @@ export function createTextPlateBp(
     version,
   } = { ...defaultGenerateTextPlateBpSettings, ...settings };
 
-  const lines = getTextWithMaxLineLen(input, maxLineLength).split("\n");
+  if(text.length === 0)
+    throw new Error("Text must not be empty");
+
+  const lines = getTextWithMaxLineLen(text, maxLineLength).split("\n");
   const entities: FactorioBP["blueprint"]["entities"] = [];
 
   for(let y = 0; y < lines.length; y++) {
@@ -69,11 +77,11 @@ export function createTextPlateBp(
     }
   }
 
-  const descriptionRaw = `[item=textplate-${size}-${material}] ${packageJson.homepage}\n${input} [item=textplate-${size}-${material}]`;
+  const descriptionRaw = `[item=textplate-${size}-${material}] ${packageJson.homepage}\n${text} [item=textplate-${size}-${material}]`;
   const description = descriptionRaw.length > 499 ? descriptionRaw.slice(0, 496) + "..." : descriptionRaw;
 
   /** The first four letters or digits of the input text */
-  const firstFourLetters = input.replace(/[^a-zA-Z0-9]/g, "").slice(0, 4);
+  const firstFourLetters = text.replace(/[^a-zA-Z0-9]/g, "").slice(0, 4);
 
   const icons = firstFourLetters.length > 0
     ? firstFourLetters.split("").map((ch, i) => ({
