@@ -16,6 +16,10 @@
     "build-linux": "nexe --target linux-x64-14.15.3 -i index.js -o dist/factoriotextplategen",
     "build-mac": "tsc && nexe --target macos-x64-14.15.3 -i index.js -o dist/factoriotextplategen"
   },
+  "bin": {
+    "factorio-text-plate-gen": "src/cli.js",
+    "factoriotextplategen": "src/cli.js"
+  },
   "author": {
     "name": "Sv443",
     "url": "https://github.com/Sv443"
