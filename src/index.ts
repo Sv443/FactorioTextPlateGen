@@ -364,7 +364,7 @@ async function showSettingsMenu(): Promise<unknown | void> {
       message: "How many tiles of space should be between lines? Negative numbers allow reversing text direction vertically. Ctrl+C to cancel.",
     });
 
-    if(!lineSpacing)
+    if(!lineSpacing && lineSpacing !== 0)
       return showSettingsMenu();
 
     settings.lineSpacing = lineSpacing;
