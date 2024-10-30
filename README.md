@@ -6,7 +6,7 @@ Interactive prompt to generate text plate blueprints for Factorio.
 ## Features:
 - Create blueprint from file or text input
 - Decode any blueprint to a JSON file from a file or text input
-- Specify text plate material, size and line spacing
+- Specify text plate material, size, line spacing, text direction and max line length
 
 <br>
 
