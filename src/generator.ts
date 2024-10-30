@@ -29,10 +29,19 @@ export const defaultGenerateTextPlateBpSettings: Required<GenerateTextPlateBpSet
   version: 562949954207746,
 } as const;
 
-/** Regular expression to match disallowed characters */
-export const disallowedCharsRegex = new RegExp(`[^${
-  Object.values(characters).map(ch => ([ch.char, ...("replacements" in ch ? ch.replacements : [])])).join("")
-}]`, "gi");
+/** Returns all allowed characters, escaped for use in a regular expression's `[]` character group */
+export const getAllowedCharsEscaped = () => `${Object.values(characters)
+    .filter(ch => ch.char !== "WildCard")
+    .map(ch => ([ch.char, ...("replacements" in ch ? ch.replacements : [])]))
+    .join("")
+    .replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&")
+  }\\s\\r\\n`;
+
+/** Regular expression to match any disallowed characters */
+export const disallowedCharsRegex = new RegExp(`[^${getAllowedCharsEscaped()}]`, "gi");
+
+/** Regular expression to match only allowed characters */
+export const allowedCharsRegex = new RegExp(`^[${getAllowedCharsEscaped()}]$`, "gmi");
 
 /** Creates a Factorio blueprint object from the input text with the provided settings */
 export async function createTextPlateBp(
@@ -77,7 +86,7 @@ export async function createTextPlateBp(
     }
   }
 
-  const descriptionRaw = `[item=textplate-${size}-${material}] ${packageJson.homepage}\n${text} [item=textplate-${size}-${material}]`;
+  const descriptionRaw = `[item=textplate-${size}-${material}] ${packageJson.homepage} [item=textplate-${size}-${material}]\n${text}`;
   const description = descriptionRaw.length > 499 ? descriptionRaw.slice(0, 496) + "..." : descriptionRaw;
 
   /** The first four letters or digits of the input text */
