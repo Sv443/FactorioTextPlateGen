@@ -28,7 +28,7 @@ async function init() {
 
   await writeFile(".text-plate-settings.json", JSON.stringify(settings, null, 2), "utf8");
 
-  console.log(`\x1b[34mFactorio Text Plate Blueprint Generator\x1b[0m\nby Sv443 - ${packageJson.homepage}\n`);
+  console.log(`\x1b[34mFactorio Text Plate Blueprint Generator\x1b[0m\n${packageJson.homepage}\n`);
   await showMenu();
 }
 
@@ -239,6 +239,7 @@ async function showSettingsMenu(): Promise<unknown | void> {
       { title: `Line spacing: ${settings.lineSpacing}`, value: "lineSpacing" },
       { title: `Text direction: ${getChoiceVal(textDirectionChoices, settings.textDirection)}`, value: "textDirection" },
       { title: `Max line length: ${settings.maxLineLength}`, value: "maxLineLength" },
+      { title: `Blueprint label: ${settings.bpLabel}`, value: "bpLabel" },
       { title: "\x1b[31mBack\x1b[0m", value: "back" },
     ],
   });
@@ -285,7 +286,7 @@ async function showSettingsMenu(): Promise<unknown | void> {
     const { lineSpacing } = await prompt({
       name: "lineSpacing",
       type: "number",
-      message: "How many tiles of space should be between lines? Ctrl+C to cancel.",
+      message: "How many tiles of space should be between lines? Negative numbers allow reversing text direction vertically. Ctrl+C to cancel.",
     });
 
     if(!lineSpacing)
@@ -328,6 +329,24 @@ async function showSettingsMenu(): Promise<unknown | void> {
       return showSettingsMenu();
 
     settings.maxLineLength = maxLineLength;
+    await writeFile(".text-plate-settings.json", JSON.stringify(settings, null, 2), "utf8");
+
+    console.log("\n\x1b[32mSettings saved.\x1b[0m\n");
+    break;
+  }
+  //#SECTION bpLabel
+  case "bpLabel": {
+    const { bpLabel } = await prompt({
+      name: "bpLabel",
+      type: "text",
+      message: "What should the blueprint label be? Ctrl+C to cancel.",
+      limit: 199,
+    });
+
+    if(!bpLabel)
+      return showSettingsMenu();
+
+    settings.bpLabel = bpLabel;
     await writeFile(".text-plate-settings.json", JSON.stringify(settings, null, 2), "utf8");
 
     console.log("\n\x1b[32mSettings saved.\x1b[0m\n");
