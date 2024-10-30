@@ -44,12 +44,13 @@ async function showMenu(): Promise<unknown | void> {
     type: "select",
     message: "What do you want to do?",
     choices: [
-      { title: "Create text plate blueprint from a string", value: "createFromString" },
-      { title: "Create text plate blueprint from a file", value: "createFromFile" },
-      { title: "Decode blueprint string", value: "decodeString" },
-      { title: "Decode blueprint file", value: "decodeFile" },
-      { title: "\x1b[33mEdit settings\x1b[0m", value: "editSettings" },
-      { title: "\x1b[31mExit\x1b[0m", value: "exit" },
+      { title: "\x1b[32mCreate\x1b[39m text plate blueprint from a string", value: "createFromString" },
+      { title: "\x1b[32mCreate\x1b[39m text plate blueprint from a file", value: "createFromFile" },
+      { title: "\x1b[35mDecode\x1b[39m blueprint from a string", value: "decodeString" },
+      { title: "\x1b[35mDecode\x1b[39m blueprint from a file", value: "decodeFile" },
+      { title: "\x1b[34mConfigure\x1b[39m the settings", value: "editSettings" },
+      { title: "\x1b[33mReset\x1b[39m the settings", value: "resetSettings" },
+      { title: "\x1b[31mExit\x1b[39m", value: "exit" },
     ],
   });
 
@@ -187,9 +188,25 @@ async function showMenu(): Promise<unknown | void> {
     await pause();
     break;
   }
-  //#SECTION changeSettings
+  //#SECTION editSettings
   case "editSettings":
     return await showSettingsMenu();
+  //#SECTION resetSettings
+  case "resetSettings": {
+    const { confirm } = await prompt({
+      name: "confirm",
+      type: "confirm",
+      message: "Are you sure you want to reset the settings to the default values?",
+    });
+
+    if(!confirm)
+      break;
+
+    await writeFile(".text-plate-settings.json", JSON.stringify(defaultSettings, null, 2), "utf8");
+    console.log("\n\x1b[32mSuccessfully reset settings to the default values.\x1b[0m\n");
+    await pause();
+    break;
+  }
   //#SECTION default, exit
   default:
   case "exit":
@@ -234,13 +251,13 @@ async function showSettingsMenu(): Promise<unknown | void> {
     type: "select",
     message: "What setting do you want to change?",
     choices: [
-      { title: `Plate size: ${getChoiceVal(sizeChoices, settings.size)}`, value: "size" },
-      { title: `Plate material: ${getChoiceVal(materialChoices, settings.material)}`, value: "material" },
-      { title: `Line spacing: ${settings.lineSpacing}`, value: "lineSpacing" },
-      { title: `Text direction: ${getChoiceVal(textDirectionChoices, settings.textDirection)}`, value: "textDirection" },
-      { title: `Max line length: ${settings.maxLineLength}`, value: "maxLineLength" },
-      { title: `Blueprint label: ${settings.bpLabel}`, value: "bpLabel" },
-      { title: "\x1b[31mBack\x1b[0m", value: "back" },
+      { title: `\x1b[1mPlate size:\x1b[22m ${getChoiceVal(sizeChoices, settings.size)}`, value: "size" },
+      { title: `\x1b[1mPlate material:\x1b[22m ${getChoiceVal(materialChoices, settings.material)}`, value: "material" },
+      { title: `\x1b[1mLine spacing:\x1b[22m ${settings.lineSpacing}`, value: "lineSpacing" },
+      { title: `\x1b[1mText direction:\x1b[22m ${getChoiceVal(textDirectionChoices, settings.textDirection)}`, value: "textDirection" },
+      { title: `\x1b[1mMax line length:\x1b[22m ${settings.maxLineLength}`, value: "maxLineLength" },
+      { title: `\x1b[1mBlueprint label:\x1b[22m ${settings.bpLabel}`, value: "bpLabel" },
+      { title: "\x1b[31mGo back\x1b[39m", value: "back" },
     ],
   });
 
