@@ -12,7 +12,8 @@
       "skipFiles": [
         "<node_internals>/**",
         "${workspaceFolder}/node_modules/**"
-      ]
+      ],
+      "preLaunchTask": "pre-build"
     },
     {
       "name": "test.ts",
@@ -25,7 +26,8 @@
       "skipFiles": [
         "<node_internals>/**",
         "${workspaceFolder}/node_modules/**"
-      ]
+      ],
+      "preLaunchTask": "pre-build"
     }
   ]
 }
