@@ -1,37 +1,69 @@
+<div style="text-align: center;" align="center">
+
 # Factorio Text Plate Generator
-Interactive prompt to generate text plate blueprints for Factorio.
+### Interactive prompt to generate text plate blueprints for Factorio.
+
+[**Features**](#features) • [**Installation**](#installation) • [**Basic usage**](#basic-usage) • [**Advanced usage**](#advanced-usage) • [**Building**](#building)
+
+<br>
+
+<img src=".github/ingame.png" alt="In-game example" width="800px" />
+
+</div>
 
 <br>
 
 ## Features:
 - Create blueprint from file or text input
 - Decode any blueprint to a JSON file from a file or text input
-- Specify text plate material, size, line spacing, text direction and max line length
+- Persistent settings that allow you to specify:
+  - Text plate material
+  - Text plate size
+  - Line spacing
+  - Text direction
+  - Max line length
+  - Blueprint name
+- Global command for generating blueprints from and to anywhere on your system
 
 <br>
 
-## Setup:
+## Installation:
 1. Install Node.js and npm
 2. Clone or download and extract the repository (green button at the top of the page)
 3. Run the command `npm i` in the project directory (where the `package.json` file is)
-4. Run `npm start` to show the interactive prompt
-5. For registering the global command `factorio-text-plate-gen`, run `npm run pre-build` and `npm link` in the project directory
+4. Run `npm start` in the same directory to show the interactive prompt  
+  or  
+  Register the global command `factorio-text-plate-gen` by running the command `npm run link` (not `npm link`!) in the project directory
+
+> [!NOTE]  
+> - You can also substitute the `npm` command with `pnpm` or `yarn` if you prefer those package managers.  
 
 <br>
 
 ## Basic usage:
-1. Create a file (`input.txt` by default) in the project directory and write your text in it.  
+1. Create a file (`input.txt` by default) in the directory you're starting the program from and write your text in it.  
   You can use all special characters that are defined in [`src/characters.json`](./src/characters.json)
 2. Run `npm start` to show the interactive prompt and select `Configure the settings` to adjust the text plate settings.
 3. Go back to the main menu and select `Create text plate blueprint from a file`.
 4. Press enter to use the default file `input.txt` or enter the path to your file.
-5. The blueprint will be saved to a file called `output.txt` in the project directory.
+5. The blueprint will be saved to a file called `output.txt` in the directory you called the program.
+
+<br>
+
+<div style="text-align: center;" align="center">
+
+<img src=".github/cli.png" alt="CLI interface example" width="600px" />
+
+</div>
 
 <br>
 
 ## Advanced usage:
 - You can edit the file [`src/characters.json`](./src/characters.json) to adjust which characters in the input text are converted to which text plate variant.  
   Make sure to only add or modify the `replacements` property and leave everything else untouched.
+- You can register custom aliases for `factorio-text-plate-gen` by editing `bin` in [`package.json`](./package.json) and running `npm link` again.
+- After running the program once, a folder `factorio-text-plate-gen` will be created in your appdata directory, where settings files will be stored.  
+  You can delete this folder to reset everything to the default.
 - If you are interested in the blueprint object structure or want to extend it, check out the file [`src/types.ts`](./src/types.ts) which contains all TS types.  
 - If you know TypeScript, you can create a `test.ts` file in the same directory as the [`package.json`](./package.json) file and run it with `npm run test` to write your own code to generate text plates or encode and decode any blueprint string in various ways.  
   You can also use the [VS Code debugger](https://code.visualstudio.com/docs/nodejs/nodejs-debugging) to debug your code. Select the profile `test.ts`, set breakpoints and then press F5 to start debugging your code.
