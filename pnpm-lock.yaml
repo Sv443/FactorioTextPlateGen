@@ -8,6 +8,9 @@ importers:
 
   .:
     dependencies:
+      appdata-path:
+        specifier: ^1.0.0
+        version: 1.0.0
       prompts:
         specifier: ^2.4.2
         version: 2.4.2
@@ -435,6 +438,9 @@ packages:
 
   app-builder@7.0.4:
     resolution: {integrity: sha512-QCmWZnoNN2uItlRV+gj4J6OONaFcJPyFoIuP1RkoILcuq19MlkynYB+wtH8uGv/umyynMWHI1HxnH1jGa1hNKQ==}
+
+  appdata-path@1.0.0:
+    resolution: {integrity: sha512-ZbH3ezXfnT/YE3NdqduIt4lBV+H0ybvA2Qx3K76gIjQvh8gROpDFdDLpx6B1QJtW7zxisCbpTlCLhKqoR8cDBw==}
 
   archive-type@4.0.0:
     resolution: {integrity: sha512-zV4Ky0v1F8dBrdYElwTvQhweQ0P7Kwc1aluqJsYtOBP01jXcWCyW2IEfI1YiqsG+Iy7ZR+o5LF1N+PGECBxHWA==}
@@ -1703,6 +1709,8 @@ snapshots:
       picomatch: 2.3.1
 
   app-builder@7.0.4: {}
+
+  appdata-path@1.0.0: {}
 
   archive-type@4.0.0:
     dependencies:

@@ -8,7 +8,9 @@
   "scripts": {
     "start": "tsx .",
     "dev": "nodemon -I --exec pnpm start",
+    "watch": "nodemon -I --exec pnpm pre-build",
     "test": "tsx test.ts",
+    "link": "pnpm run pre-build && npm link",
     "build-rollup": "tsc --noEmit && rollup -c",
     "pre-build": "tsc",
     "build": "pnpm run pre-build && pnpm run build-win && pnpm run build-linux && pnpm run build-mac",
@@ -26,6 +28,7 @@
   },
   "license": "MIT",
   "dependencies": {
+    "appdata-path": "^1.0.0",
     "prompts": "^2.4.2",
     "tslib": "^2.8.0",
     "tsx": "^4.19.2"
