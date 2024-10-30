@@ -13,7 +13,7 @@ export type GenerateTextPlateBpSettings = {
   textDirection?: TextDirection;
   /** Maximum length of a line. Default is `0` (infinite) */
   maxLineLength?: number;
-  /** Label of the blueprint. Default is `Text` */
+  /** Label of the blueprint. Default is `Text plates` */
   bpLabel?: string;
   /** Version of the blueprint. Default is `562949954207746` */
   version?: number;
@@ -25,7 +25,7 @@ export const defaultGenerateTextPlateBpSettings: Required<GenerateTextPlateBpSet
   lineSpacing: 1,
   textDirection: "ltr",
   maxLineLength: 0,
-  bpLabel: "Text",
+  bpLabel: "Text plates",
   version: 562949954207746,
 } as const;
 
@@ -47,8 +47,6 @@ export function createTextPlateBp(
   const lines = getTextWithMaxLineLen(input, maxLineLength).split("\n");
   const entities: FactorioBP["blueprint"]["entities"] = [];
 
-  void ["TODO:", textDirection];
-
   for(let y = 0; y < lines.length; y++) {
     const line = lines[y];
     for(let x = 0; x < line.length; x++) {
@@ -56,19 +54,23 @@ export function createTextPlateBp(
       if(char === " ")
         continue;
 
+      const sizeMult = size === "small" ? 1 : 2;
+      const textDirMult = textDirection === "rtl" ? -1 : 1;
+
       entities.push({
         entity_number: entities.length + 1,
         name: `textplate-${size}-${material}`,
         position: {
-          x: size === "small" ? x : x * 2 + 0.5,
-          y: (size === "small" ? y : y * 2) + y * (lineSpacing ?? 0) + 0.5,
+          x: (x * sizeMult + 0.5) * textDirMult,
+          y: (y * sizeMult + y * (lineSpacing ?? 0) + 0.5) * textDirMult,
         },
         variation: resolveTextPlateVariant(char),
       });
     }
   }
 
-  const description = `Generated with ${packageJson.homepage}\n\n${input.slice(0, 500)}${input.length > 500 ? "..." : ""}`;
+  const descriptionRaw = `[item=textplate-${size}-${material}] ${packageJson.homepage}\n${input} [item=textplate-${size}-${material}]`;
+  const description = descriptionRaw.length > 499 ? descriptionRaw.slice(0, 496) + "..." : descriptionRaw;
 
   /** The first four letters or digits of the input text */
   const firstFourLetters = input.replace(/[^a-zA-Z0-9]/g, "").slice(0, 4);
