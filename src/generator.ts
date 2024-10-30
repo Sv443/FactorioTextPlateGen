@@ -1,5 +1,5 @@
 import characters from "./characters.json" with { type: "json" };
-import type { FactorioBP, TextPlateMaterial, TextPlateSize } from "./types.ts";
+import type { FactorioBP, TextDirection, TextPlateMaterial, TextPlateSize } from "./types.ts";
 
 export type GenerateTextPlateBpSettings = {
   /** Size of the text plate. Default is `small` */
@@ -8,6 +8,10 @@ export type GenerateTextPlateBpSettings = {
   material?: TextPlateMaterial;
   /** Tiles of space between lines. `0` for no space. Default is `1` */
   lineSpacing?: number;
+  /** Text direction. Default is `ltr` (left to right) */
+  textDirection?: TextDirection;
+  /** Maximum length of a line. Default is `-1` (infinite) */
+  maxLineLength?: number;
   /** Version of the blueprint. Default is `562949954207746` */
   version?: number;
 };
@@ -16,6 +20,8 @@ export const defaultGenerateTextPlateBpSettings: Required<GenerateTextPlateBpSet
   size: "small",
   material: "copper",
   lineSpacing: 1,
+  textDirection: "ltr",
+  maxLineLength: -1,
   version: 562949954207746,
 } as const;
 
@@ -24,10 +30,12 @@ export function createTextPlateBp(
   input: string,
   settings: GenerateTextPlateBpSettings = defaultGenerateTextPlateBpSettings,
 ): FactorioBP {
-  const { size, material, lineSpacing, version } = { ...defaultGenerateTextPlateBpSettings, ...settings };
+  const { size, material, lineSpacing, textDirection, maxLineLength, version } = { ...defaultGenerateTextPlateBpSettings, ...settings };
 
-  const lines = input.split("\n");
+  const lines = getTextWithMaxLineLen(input, maxLineLength).split("\n");
   const entities: FactorioBP["blueprint"]["entities"] = [];
+
+  void ["TODO:", textDirection];
 
   for(let y = 0; y < lines.length; y++) {
     const line = lines[y];
@@ -58,6 +66,31 @@ export function createTextPlateBp(
       version,
     },
   };
+}
+
+/**
+ * Returns the given text with a maximum line length applied by inserting newlines.  
+ * If the new line breaks are inside a word, they will be moved to the start of the word at the boundary.
+ */
+export function getTextWithMaxLineLen(text: string, maxLineLength: number) {
+  if(maxLineLength <= 0)
+    return text;
+
+  const words = text.split(" ");
+  let line = "";
+  let result = "";
+  for(const word of words) {
+    if(line.length + word.length + 1 <= maxLineLength) {
+      line += (line.length > 0 ? " " : "") + word;
+    }
+    else {
+      result += (result.length > 0 ? "\n" : "") + line;
+      line = word;
+    }
+  }
+  result += (result.length > 0 ? "\n" : "") + line;
+
+  return result;
 }
 
 /** Tries to resolve the 1-indexed variant number from the passed character */

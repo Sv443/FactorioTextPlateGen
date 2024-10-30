@@ -2,7 +2,7 @@ import { access, constants as fsconstants, readFile, writeFile } from "node:fs/p
 import prompt from "prompts";
 import { decodeBp, encodeBp } from "./compression.js";
 import { createTextPlateBp, defaultGenerateTextPlateBpSettings, type GenerateTextPlateBpSettings } from "./generator.js";
-import { TextPlateSize, type TextPlateMaterial } from "./types.ts";
+import { TextPlateSize, type TextDirection, type TextPlateMaterial } from "./types.ts";
 
 //#region init
 
@@ -16,7 +16,7 @@ let settings = { ...defaultSettings };
 
 async function init() {
   try {
-    settings = JSON.parse(await readFile("settings.json", "utf8")) as Settings;
+    settings = JSON.parse(await readFile(".text-plate-settings.json", "utf8")) as Settings;
   }
   catch(err) {
     if(!await exists(".text-plate-settings.json"))
@@ -25,12 +25,15 @@ async function init() {
       console.error("\n⚠️ \x1b[33mFailed to load settings. Using the defaults.\x1b[0m\n");
   }
 
+  await writeFile(".text-plate-settings.json", JSON.stringify(settings, null, 2), "utf8");
+
   console.log("\x1b[34mFactorio Text Plate Blueprint Generator\x1b[0m\nby Sv443 - https://github.com/Sv443/FactorioTextPlateGen\n");
   await showMenu();
 }
 
 //#region main menu
 
+/** Shows the interactive main menu */
 async function showMenu(): Promise<unknown | void> {
   if(!process.stdin.isTTY)
     throw new Error("This script requires a TTY stdin channel (terminal with input capability).");
@@ -40,7 +43,7 @@ async function showMenu(): Promise<unknown | void> {
     type: "select",
     message: "What do you want to do?",
     choices: [
-      { title: "Create text plate blueprint from string", value: "createFromString" },
+      { title: "Create text plate blueprint from a string", value: "createFromString" },
       { title: "Create text plate blueprint from a file", value: "createFromFile" },
       { title: "Decode blueprint string", value: "decodeString" },
       { title: "Decode blueprint file", value: "decodeFile" },
@@ -195,15 +198,44 @@ async function showMenu(): Promise<unknown | void> {
 
 //#region settings menu
 
+type Choice<TValue> = { title: string, value: TValue }
+
+const sizeChoices: Choice<TextPlateSize>[] = [
+  { title: "Small", value: "small" },
+  { title: "Large", value: "large" },
+];
+
+const textDirectionChoices: Choice<TextDirection>[] = [
+  { title: "Left to right", value: "ltr" },
+  { title: "Right to left", value: "rtl" },
+];
+
+const materialChoices: Choice<TextPlateMaterial>[] = [
+  { title: "Concrete", value: "concrete" },
+  { title: "Copper", value: "copper" },
+  { title: "Glass", value: "glass" },
+  { title: "Gold", value: "gold" },
+  { title: "Iron", value: "iron" },
+  { title: "Plastic", value: "plastic" },
+  { title: "Steel", value: "steel" },
+  { title: "Stone", value: "stone" },
+  { title: "Uranium", value: "uranium" },
+];
+
+/** Shows the interactive settings menu */
 async function showSettingsMenu(): Promise<unknown | void> {
+  const getChoiceVal = (choices: Choice<string>[], val: string) => choices.find((c) => c.value === val)?.title ?? val;
+
   const { setting } = await prompt({
     name: "setting",
     type: "select",
     message: "What setting do you want to change?",
     choices: [
-      { title: `Plate size: ${settings.size}`, value: "size" },
-      { title: `Plate material: ${settings.material}`, value: "material" },
+      { title: `Plate size: ${getChoiceVal(sizeChoices, settings.size)}`, value: "size" },
+      { title: `Plate material: ${getChoiceVal(materialChoices, settings.material)}`, value: "material" },
       { title: `Line spacing: ${settings.lineSpacing}`, value: "lineSpacing" },
+      { title: `Text direction: ${getChoiceVal(textDirectionChoices, settings.textDirection)}`, value: "textDirection" },
+      { title: `Max line length: ${settings.maxLineLength}`, value: "maxLineLength" },
       { title: "\x1b[31mBack\x1b[0m", value: "back" },
     ],
   });
@@ -215,17 +247,14 @@ async function showSettingsMenu(): Promise<unknown | void> {
       name: "size",
       type: "select",
       message: "What size should the text plates be? Ctrl+C to cancel.",
-      choices: [
-        { title: "Small", value: "small" satisfies TextPlateSize },
-        { title: "Large", value: "large" satisfies TextPlateSize },
-      ],
+      choices: sizeChoices,
     });
 
     if(!size)
       return showSettingsMenu();
 
     settings.size = size;
-    await writeFile("settings.json", JSON.stringify(settings, null, 2), "utf8");
+    await writeFile(".text-plate-settings.json", JSON.stringify(settings, null, 2), "utf8");
 
     console.log("\n\x1b[32mSettings saved.\x1b[0m\n");
     break;
@@ -236,24 +265,14 @@ async function showSettingsMenu(): Promise<unknown | void> {
       name: "material",
       type: "select",
       message: "What material should the text plates be made of? Ctrl+C to cancel.",
-      choices: [
-        { title: "Concrete", value: "concrete" },
-        { title: "Copper", value: "copper" },
-        { title: "Glass", value: "glass" },
-        { title: "Gold", value: "gold" },
-        { title: "Iron", value: "iron" },
-        { title: "Plastic", value: "plastic" },
-        { title: "Steel", value: "steel" },
-        { title: "Stone", value: "stone" },
-        { title: "Uranium", value: "uranium" },
-      ] satisfies { title: string, value: TextPlateMaterial }[],
+      choices: materialChoices,
     });
 
     if(!material)
       return showSettingsMenu();
 
     settings.material = material;
-    await writeFile("settings.json", JSON.stringify(settings, null, 2), "utf8");
+    await writeFile(".text-plate-settings.json", JSON.stringify(settings, null, 2), "utf8");
 
     console.log("\n\x1b[32mSettings saved.\x1b[0m\n");
     break;
@@ -270,7 +289,43 @@ async function showSettingsMenu(): Promise<unknown | void> {
       return showSettingsMenu();
 
     settings.lineSpacing = lineSpacing;
-    await writeFile("settings.json", JSON.stringify(settings, null, 2), "utf8");
+    await writeFile(".text-plate-settings.json", JSON.stringify(settings, null, 2), "utf8");
+
+    console.log("\n\x1b[32mSettings saved.\x1b[0m\n");
+    break;
+  }
+  //#SECTION text direction
+  case "textDirection": {
+    const { textDirection } = await prompt({
+      name: "textDirection",
+      type: "select",
+      message: "How should the text be aligned horizontally? Ctrl+C to cancel.",
+      choices: textDirectionChoices,
+    });
+
+    if(!textDirection)
+      return showSettingsMenu();
+
+    settings.textDirection = textDirection;
+    await writeFile(".text-plate-settings.json", JSON.stringify(settings, null, 2), "utf8");
+
+    console.log("\n\x1b[32mSettings saved.\x1b[0m\n");
+    break;
+  }
+  //#SECTION maxLineLength
+  case "maxLineLength": {
+    const { maxLineLength } = await prompt({
+      name: "maxLineLength",
+      type: "number",
+      message: "What should the maximum length of a line be? -1 for infinite. Ctrl+C to cancel.",
+      min: -1,
+    });
+
+    if(!maxLineLength)
+      return showSettingsMenu();
+
+    settings.maxLineLength = maxLineLength;
+    await writeFile(".text-plate-settings.json", JSON.stringify(settings, null, 2), "utf8");
 
     console.log("\n\x1b[32mSettings saved.\x1b[0m\n");
     break;

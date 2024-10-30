@@ -22,6 +22,8 @@ export type FactorioBP = {
   }
 };
 
+export type TextDirection = "ltr" | "rtl";
+
 export type TextPlateSize = "small" | "large";
 
 export type TextPlateMaterial =
