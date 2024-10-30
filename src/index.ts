@@ -1,7 +1,8 @@
-import { access, constants as fsconstants, readFile, writeFile } from "node:fs/promises";
+import { readFile, writeFile } from "node:fs/promises";
 import prompt from "prompts";
 import { decodeBp, encodeBp } from "./compression.js";
-import { createTextPlateBp, defaultGenerateTextPlateBpSettings, GenerateTextPlateBpSettings } from "./generator.js";
+import { createTextPlateBp, defaultGenerateTextPlateBpSettings, disallowedCharsRegex, GenerateTextPlateBpSettings } from "./generator.js";
+import { exists, pause } from "./utils.js";
 import { TextPlateSize, TextDirection, TextPlateMaterial } from "./types.js";
 import packageJson from "../package.json" with { type: "json" };
 
@@ -68,39 +69,76 @@ async function showMenu(): Promise<unknown | void> {
 
     input = input.replace(/\\n/gu, "\n");
 
-    const bp = createTextPlateBp(input, settings);
+    if(disallowedCharsRegex.test(input)) {
+      console.warn("\x1b[33mWarning:\x1b[0m Some characters in the input text are not supported and will be removed.\nCheck the file 'src/characters.json' for supported characters.");
+      await pause();
+      input = input.replace(disallowedCharsRegex, "");
+    }
+
+    let { outputPath } = await prompt({
+      name: "outputPath",
+      type: "text",
+      message: "Enter the path to save the blueprint (default: output.txt):",
+    });
+
+    if(outputPath === undefined)
+      return showMenu();
+
+    if(outputPath.length === 0)
+      outputPath = "output.txt";
+
+    const bp = await createTextPlateBp(input, settings);
     const encoded = await encodeBp(bp, 48);
-    await writeFile("output.txt", encoded, "utf8");
-    console.log("\n\x1b[32mBlueprint created and saved to output.txt\x1b[0m\n");
+    await writeFile(outputPath, encoded, "utf8");
+    console.log(`\n\x1b[32mBlueprint created and saved to '${outputPath}'\x1b[0m\n`);
     await pause();
     break;
   }
   //#SECTION createFromFile
   case "createFromFile": {
-    let { file } = await prompt({
-      name: "file",
+    let { inputPath } = await prompt({
+      name: "inputPath",
       type: "text",
       message: "Enter the path to the file containing the text (default: input.txt):",
     });
 
-    if(file === undefined)
+    if(inputPath === undefined)
       return showMenu();
 
-    if(file.length === 0)
-      file = "input.txt";
+    if(inputPath.length === 0)
+      inputPath = "input.txt";
 
-    if(!await exists(file)) {
+    if(!await exists(inputPath)) {
       console.error("\n\x1b[31mFile not found or no permission to access it.\x1b[0m\n");
       await pause();
       break;
     }
 
-    const input = await readFile(file, "utf8");
-    const bp = createTextPlateBp(input, settings);
+    let input = await readFile(inputPath, "utf8");
+
+    if(disallowedCharsRegex.test(input)) {
+      console.warn("\x1b[33mWarning:\x1b[0m Some characters in the input text are not supported and will be removed.\nCheck the file 'src/characters.json' for supported characters.");
+      await pause();
+      input = input.replace(disallowedCharsRegex, "");
+    }
+
+    let { outputPath } = await prompt({
+      name: "outputPath",
+      type: "text",
+      message: "Enter the path to save the blueprint (default: output.txt):",
+    });
+
+    if(outputPath === undefined)
+      return showMenu();
+
+    if(outputPath.length === 0)
+      outputPath = "output.txt";
+
+    const bp = await createTextPlateBp(input, settings);
     const encoded = await encodeBp(bp, 48);
 
-    await writeFile("output.txt", encoded, "utf8");
-    console.log("\n\x1b[32mBlueprint created and saved to output.txt\x1b[0m\n");
+    await writeFile(outputPath, encoded, "utf8");
+    console.log(`\n\x1b[32mBlueprint created and saved to '${outputPath}'\x1b[0m\n`);
     await pause();
     break;
   }
@@ -143,19 +181,19 @@ async function showMenu(): Promise<unknown | void> {
   }
   //#SECTION decodeFile
   case "decodeFile": {
-    let { file } = await prompt({
-      name: "file",
+    let { inputPath } = await prompt({
+      name: "inputPath",
       type: "text",
       message: "Enter the path to the file containing the blueprint string (default: input.txt):",
     });
 
-    if(file === undefined)
+    if(inputPath === undefined)
       return showMenu();
 
-    if(!file)
-      file = "input.txt";
+    if(!inputPath)
+      inputPath = "input.txt";
 
-    if(!await exists(file)) {
+    if(!await exists(inputPath)) {
       console.error("\n\x1b[31mFile not found or no permission to access it.\x1b[0m\n");
       await pause();
       break;
@@ -173,7 +211,7 @@ async function showMenu(): Promise<unknown | void> {
     if(outputPath.length === 0)
       outputPath = "output.json";
 
-    const input = await readFile(file, "utf8");
+    const input = await readFile(inputPath, "utf8");
     const decoded = await decodeBp(input);
 
     if(!decoded) {
@@ -193,13 +231,13 @@ async function showMenu(): Promise<unknown | void> {
     return await showSettingsMenu();
   //#SECTION resetSettings
   case "resetSettings": {
-    const { confirm } = await prompt({
-      name: "confirm",
+    const { confirmReset } = await prompt({
+      name: "confirmReset",
       type: "confirm",
       message: "Are you sure you want to reset the settings to the default values?",
     });
 
-    if(!confirm)
+    if(!confirmReset)
       break;
 
     await writeFile(".text-plate-settings.json", JSON.stringify(defaultSettings, null, 2), "utf8");
@@ -375,60 +413,6 @@ async function showSettingsMenu(): Promise<unknown | void> {
     return showMenu();
   }
   return showSettingsMenu();
-}
-
-//#region utils
-
-/** Shows a "Press any key to continue..." message and waits for a key press */
-function pause(text?: string) {
-  if(!text || typeof text !== "string")
-    text = "Press any key to continue...";
-
-  const initialRaw = process.stdin.isRaw;
-  process.stdin.setRawMode(true);
-
-  return new Promise((resolve, reject) => {
-    process.stdout.write(`${text} `);
-    process.stdin.resume();
-
-    let onData = (chunk: string) => {
-      if(/\u0003/gu.test(chunk)) // eslint-disable-line no-control-regex
-        process.exit(0);
-
-      process.stdout.write("\n");
-      process.stdin.pause();
-
-      process.stdin.removeListener("data", onData);
-      process.stdin.removeListener("error", onError);
-
-      process.stdin.setRawMode(initialRaw);
-
-      return resolve(chunk.toString());
-    }
-
-    let onError = (err: unknown) => {
-      process.stdin.removeListener("data", onData);
-      process.stdin.removeListener("error", onError);
-
-      process.stdin.setRawMode(initialRaw);
-
-      return reject(err);
-    }
-
-    process.stdin.on("data", onData);
-    process.stdin.on("error", onError);
-  });
-}
-
-/** Checks if a file exists */
-async function exists(path: string) {
-  try {
-    await access(path, fsconstants.W_OK | fsconstants.R_OK);
-    return true;
-  }
-  catch {
-    return false;
-  }
 }
 
 init();
