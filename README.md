@@ -10,11 +10,22 @@ Interactive prompt to generate text plate blueprints for Factorio.
 
 <br>
 
-## Usage:
+## Setup:
 1. Install Node.js and npm
-2. Clone or download and extract the repository
-3. Run the command `npm i` in the project directory
+2. Clone or download and extract the repository (green button at the top of the page)
+3. Run the command `npm i` in the project directory (where the `package.json` file is)
 4. Run `npm start` to show the interactive prompt
+5. For registering the global command `factorio-text-plate-gen`, run `npm run pre-build` and `npm link` in the project directory
+
+<br>
+
+## Basic usage:
+1. Create a file (`input.txt` by default) in the project directory and write your text in it.  
+  You can use all special characters that are defined in [`src/characters.json`](./src/characters.json)
+2. Run `npm start` to show the interactive prompt and select `Configure the settings` to adjust the text plate settings.
+3. Go back to the main menu and select `Create text plate blueprint from a file`.
+4. Press enter to use the default file `input.txt` or enter the path to your file.
+5. The blueprint will be saved to a file called `output.txt` in the project directory.
 
 <br>
 
