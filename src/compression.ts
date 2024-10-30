@@ -1,10 +1,7 @@
 import { createDeflate, createInflate } from "node:zlib";
 import type { FactorioBP } from "./types.js";
 
-/**
- * Decodes a Factorio blueprint string.  
- * @returns The version of the blueprint and the data as an object.
- */
+/** Decodes a base64-encoded, deflated Factorio blueprint string into an object. */
 export async function decodeBp(blueprint: string): Promise<({ version: number } & FactorioBP) | void> {
   try {
     const version = blueprint.charCodeAt(0);
@@ -46,10 +43,7 @@ export async function decodeBp(blueprint: string): Promise<({ version: number } 
   }
 }
 
-/**
- * Encodes a Factorio blueprint object into a string.  
- * @returns The encoded blueprint string.
- */
+/** Converts a Factorio blueprint object into a deflated, base64-encoded string. */
 export async function encodeBp(bp: FactorioBP, version: number): Promise<string> {
   try {
     const bpData = Buffer.from(JSON.stringify(bp), "utf8");

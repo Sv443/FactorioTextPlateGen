@@ -2,7 +2,8 @@ import { access, constants as fsconstants, readFile, writeFile } from "node:fs/p
 import prompt from "prompts";
 import { decodeBp, encodeBp } from "./compression.js";
 import { createTextPlateBp, defaultGenerateTextPlateBpSettings, type GenerateTextPlateBpSettings } from "./generator.js";
-import { TextPlateSize, type TextDirection, type TextPlateMaterial } from "./types.ts";
+import { TextPlateSize, type TextDirection, type TextPlateMaterial } from "./types.js";
+import packageJson from "../package.json" with { type: "json" };
 
 //#region init
 
@@ -27,7 +28,7 @@ async function init() {
 
   await writeFile(".text-plate-settings.json", JSON.stringify(settings, null, 2), "utf8");
 
-  console.log("\x1b[34mFactorio Text Plate Blueprint Generator\x1b[0m\nby Sv443 - https://github.com/Sv443/FactorioTextPlateGen\n");
+  console.log(`\x1b[34mFactorio Text Plate Blueprint Generator\x1b[0m\nby Sv443 - ${packageJson.homepage}\n`);
   await showMenu();
 }
 
@@ -55,7 +56,7 @@ async function showMenu(): Promise<unknown | void> {
   switch(action) {
   //#SECTION createFromString
   case "createFromString": {
-    const { input } = await prompt({
+    let { input } = await prompt({
       name: "input",
       type: "text",
       message: "Enter the text you want to create a blueprint from (\\n for line break, Ctrl+C to cancel):",
@@ -63,6 +64,8 @@ async function showMenu(): Promise<unknown | void> {
 
     if(!input)
       return showMenu();
+
+    input = input.replace(/\\n/gu, "\n");
 
     const bp = createTextPlateBp(input, settings);
     const encoded = await encodeBp(bp, 48);
@@ -114,14 +117,14 @@ async function showMenu(): Promise<unknown | void> {
     let { outputPath } = await prompt({
       name: "outputPath",
       type: "text",
-      message: "Enter the path to save the decoded blueprint (default: output.txt):",
+      message: "Enter the path to save the decoded blueprint (default: output.json):",
     });
 
     if(outputPath === undefined)
       return showMenu();
 
     if(outputPath.length === 0)
-      outputPath = "output.txt";
+      outputPath = "output.json";
 
     const decoded = await decodeBp(input);
 

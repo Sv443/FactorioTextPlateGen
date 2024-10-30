@@ -1,6 +1,10 @@
 /** See https://wiki.factorio.com/Blueprint_string_format#Json_representation_of_a_blueprint%2Fblueprint_book */
 export type FactorioBP = {
   blueprint: {
+    item: "blueprint";
+    label?: string;
+    description?: string;
+    version: number;
     icons: Array<{
       signal: {
         name: string;
@@ -17,8 +21,6 @@ export type FactorioBP = {
       variation?: number;
       direction?: number;
     }>;
-    item: "blueprint";
-    version: number;
   }
 };
 

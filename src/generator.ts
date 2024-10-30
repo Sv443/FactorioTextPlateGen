@@ -1,5 +1,6 @@
 import characters from "./characters.json" with { type: "json" };
-import type { FactorioBP, TextDirection, TextPlateMaterial, TextPlateSize } from "./types.ts";
+import packageJson from "../package.json" with { type: "json" };
+import type { FactorioBP, TextDirection, TextPlateMaterial, TextPlateSize } from "./types.js";
 
 export type GenerateTextPlateBpSettings = {
   /** Size of the text plate. Default is `small` */
@@ -12,6 +13,8 @@ export type GenerateTextPlateBpSettings = {
   textDirection?: TextDirection;
   /** Maximum length of a line. Default is `0` (infinite) */
   maxLineLength?: number;
+  /** Label of the blueprint. Default is `Text` */
+  bpLabel?: string;
   /** Version of the blueprint. Default is `562949954207746` */
   version?: number;
 };
@@ -22,6 +25,7 @@ export const defaultGenerateTextPlateBpSettings: Required<GenerateTextPlateBpSet
   lineSpacing: 1,
   textDirection: "ltr",
   maxLineLength: 0,
+  bpLabel: "Text",
   version: 562949954207746,
 } as const;
 
@@ -30,7 +34,15 @@ export function createTextPlateBp(
   input: string,
   settings: GenerateTextPlateBpSettings = defaultGenerateTextPlateBpSettings,
 ): FactorioBP {
-  const { size, material, lineSpacing, textDirection, maxLineLength, version } = { ...defaultGenerateTextPlateBpSettings, ...settings };
+  const {
+    size,
+    material,
+    lineSpacing,
+    textDirection,
+    maxLineLength,
+    bpLabel,
+    version,
+  } = { ...defaultGenerateTextPlateBpSettings, ...settings };
 
   const lines = getTextWithMaxLineLen(input, maxLineLength).split("\n");
   const entities: FactorioBP["blueprint"]["entities"] = [];
@@ -56,14 +68,31 @@ export function createTextPlateBp(
     }
   }
 
+  const description = `Generated with ${packageJson.homepage}\n\n${input.slice(0, 500)}${input.length > 500 ? "..." : ""}`;
+
+  /** The first four letters or digits of the input text */
+  const firstFourLetters = input.replace(/[^a-zA-Z0-9]/g, "").slice(0, 4);
+
+  const icons = firstFourLetters.length > 0
+    ? firstFourLetters.split("").map((ch, i) => ({
+      signal: {
+        type: "virtual",
+        name: `signal-${ch.toUpperCase()}`
+      },
+      index: i + 1,
+    }))
+    : [
+      { signal: { name: `textplate-${size}-${material}` }, index: 1 },
+    ];
+
   return {
     blueprint: {
-      icons: [
-        { signal: { name: `textplate-${size}-${material}` }, index: 1 },
-      ],
-      entities,
       item: "blueprint",
+      label: bpLabel,
+      description,
       version,
+      icons,
+      entities,
     },
   };
 }

@@ -3,12 +3,16 @@
   "type": "module",
   "version": "0.1.0",
   "description": "Generates a Factorio text plate blueprint for the given text. Requires the text plates mod.",
+  "homepage": "https://github.com/Sv443/FactorioTextPlateGen",
   "main": "src/index.ts",
   "scripts": {
     "start": "tsx src/index.ts",
     "test": "tsx test.ts"
   },
-  "author": "Sv443",
+  "author": {
+    "name": "Sv443",
+    "url": "https://github.com/Sv443"
+  },
   "license": "MIT",
   "dependencies": {
     "prompts": "^2.4.2",
