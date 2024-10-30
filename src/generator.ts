@@ -10,7 +10,7 @@ export type GenerateTextPlateBpSettings = {
   lineSpacing?: number;
   /** Text direction. Default is `ltr` (left to right) */
   textDirection?: TextDirection;
-  /** Maximum length of a line. Default is `-1` (infinite) */
+  /** Maximum length of a line. Default is `0` (infinite) */
   maxLineLength?: number;
   /** Version of the blueprint. Default is `562949954207746` */
   version?: number;
@@ -21,7 +21,7 @@ export const defaultGenerateTextPlateBpSettings: Required<GenerateTextPlateBpSet
   material: "copper",
   lineSpacing: 1,
   textDirection: "ltr",
-  maxLineLength: -1,
+  maxLineLength: 0,
   version: 562949954207746,
 } as const;
 

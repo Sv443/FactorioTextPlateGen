@@ -317,8 +317,8 @@ async function showSettingsMenu(): Promise<unknown | void> {
     const { maxLineLength } = await prompt({
       name: "maxLineLength",
       type: "number",
-      message: "What should the maximum length of a line be? -1 for infinite. Ctrl+C to cancel.",
-      min: -1,
+      message: "What should the maximum length of a line be? 0 for infinite. Ctrl+C to cancel.",
+      min: 0,
     });
 
     if(!maxLineLength)
