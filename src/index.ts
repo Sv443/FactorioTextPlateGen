@@ -1,12 +1,21 @@
-import { readFile, writeFile } from "node:fs/promises";
+import { mkdir, readFile, writeFile } from "node:fs/promises";
+import { join } from "node:path";
 import prompt from "prompts";
-import { decodeBp, encodeBp } from "./compression.js";
+import appdataPath from "appdata-path";
+import { decodeBp, encodeBp } from "./encoding.js";
 import { createTextPlateBp, defaultGenerateTextPlateBpSettings, disallowedCharsRegex, GenerateTextPlateBpSettings } from "./generator.js";
-import { exists, pause } from "./utils.js";
+import { dirExists, fileExists, pause } from "./utils.js";
 import { TextPlateSize, TextDirection, TextPlateMaterial } from "./types.js";
 import packageJson from "../package.json" with { type: "json" };
 
+const { getAppDataPath } = appdataPath;
+
 //#region init
+
+/** Config directory path */
+const projectConfigDir = getAppDataPath("factorio-text-plate-gen");
+/** Settings file path inside the config dir */
+const settingsFilePath = join(projectConfigDir, "settings.json");
 
 type Settings = Required<GenerateTextPlateBpSettings>;
 
@@ -17,19 +26,28 @@ const defaultSettings: Settings = {
 let settings = { ...defaultSettings };
 
 async function init() {
+  if(!await dirExists(projectConfigDir)) {
+    try {
+      await mkdir(projectConfigDir, { recursive: true });
+    }
+    catch(err) {
+      console.warn("\n⚠️ \x1b[33mFailed to create the project config directory. Using the defaults.\x1b[0m\nPlease make sure the user has permission to create directories in the appdata path.");
+    }
+  }
+
   try {
-    settings = JSON.parse(await readFile(".text-plate-settings.json", "utf8")) as Settings;
+    settings = JSON.parse(await readFile(settingsFilePath, "utf8")) as Settings;
   }
   catch(err) {
-    if(!await exists(".text-plate-settings.json"))
-      await writeFile(".text-plate-settings.json", JSON.stringify(defaultSettings, null, 2), "utf8");
+    if(!await fileExists(settingsFilePath))
+      await writeFile(settingsFilePath, JSON.stringify(defaultSettings, null, 2), "utf8");
     else
-      console.error("\n⚠️ \x1b[33mFailed to load settings. Using the defaults.\x1b[0m\n");
+      console.warn("\n⚠️ \x1b[33mFailed to load settings. Using the defaults.\x1b[0m");
   }
 
-  await writeFile(".text-plate-settings.json", JSON.stringify(settings, null, 2), "utf8");
+  // always keep settings file in sync with the default values (in case new props get added) and the loaded settings
+  await writeFile(settingsFilePath, JSON.stringify(settings, null, 2), "utf8");
 
-  console.log(`\x1b[34mFactorio Text Plate Blueprint Generator\x1b[0m\n${packageJson.homepage}\n`);
   await showMenu();
 }
 
@@ -40,15 +58,17 @@ async function showMenu(): Promise<unknown | void> {
   if(!process.stdin.isTTY)
     throw new Error("This script requires a TTY stdin channel (terminal with input capability).");
 
+  console.log(`\n\n\x1b[34mFactorio Text Plate Blueprint Generator\x1b[0m\n${packageJson.homepage}\n`);
+
   const { action } = await prompt({
     name: "action",
     type: "select",
     message: "What do you want to do?",
     choices: [
-      { title: "\x1b[32mCreate\x1b[39m text plate blueprint from a string", value: "createFromString" },
       { title: "\x1b[32mCreate\x1b[39m text plate blueprint from a file", value: "createFromFile" },
-      { title: "\x1b[35mDecode\x1b[39m blueprint from a string", value: "decodeString" },
+      { title: "\x1b[32mCreate\x1b[39m text plate blueprint from a string", value: "createFromString" },
       { title: "\x1b[35mDecode\x1b[39m blueprint from a file", value: "decodeFile" },
+      { title: "\x1b[35mDecode\x1b[39m blueprint from a string", value: "decodeString" },
       { title: "\x1b[34mConfigure\x1b[39m the settings", value: "editSettings" },
       { title: "\x1b[33mReset\x1b[39m the settings", value: "resetSettings" },
       { title: "\x1b[31mExit\x1b[39m", value: "exit" },
@@ -56,6 +76,54 @@ async function showMenu(): Promise<unknown | void> {
   });
 
   switch(action) {
+  //#SECTION createFromFile
+  case "createFromFile": {
+    let { inputPath } = await prompt({
+      name: "inputPath",
+      type: "text",
+      message: "Enter the path to the file containing the text (default: input.txt):",
+    });
+
+    if(inputPath === undefined)
+      return showMenu();
+
+    if(inputPath.length === 0)
+      inputPath = "input.txt";
+
+    if(!await fileExists(inputPath)) {
+      console.error("\n\x1b[31mFile not found or no permission to access it.\x1b[0m\n");
+      await pause();
+      break;
+    }
+
+    let input = await readFile(inputPath, "utf8");
+
+    if(disallowedCharsRegex.exec(input)) {
+      console.warn("⚠️ \x1b[33mWarning:\x1b[0m Some characters in the input text are not supported and will be removed.\nCheck the file 'src/characters.json' for supported characters.");
+      await pause();
+      input = input.replace(disallowedCharsRegex, "");
+    }
+
+    let { outputPath } = await prompt({
+      name: "outputPath",
+      type: "text",
+      message: "Enter the path to save the blueprint (default: output.txt):",
+    });
+
+    if(outputPath === undefined)
+      return showMenu();
+
+    if(outputPath.length === 0)
+      outputPath = "output.txt";
+
+    const bp = await createTextPlateBp(input, settings);
+    const encoded = await encodeBp(bp, 48);
+
+    await writeFile(outputPath, encoded, "utf8");
+    console.log(`\n\x1b[32mBlueprint created and saved to '${outputPath}'\x1b[0m\n`);
+    await pause();
+    break;
+  }
   //#SECTION createFromString
   case "createFromString": {
     let { input } = await prompt({
@@ -69,8 +137,8 @@ async function showMenu(): Promise<unknown | void> {
 
     input = input.replace(/\\n/gu, "\n");
 
-    if(disallowedCharsRegex.test(input)) {
-      console.warn("\x1b[33mWarning:\x1b[0m Some characters in the input text are not supported and will be removed.\nCheck the file 'src/characters.json' for supported characters.");
+    if(disallowedCharsRegex.exec(input)) {
+      console.warn("⚠️ \x1b[33mWarning:\x1b[0m Some characters in the input text are not supported and will be removed.\nCheck the file 'src/characters.json' for supported characters.");
       await pause();
       input = input.replace(disallowedCharsRegex, "");
     }
@@ -94,51 +162,50 @@ async function showMenu(): Promise<unknown | void> {
     await pause();
     break;
   }
-  //#SECTION createFromFile
-  case "createFromFile": {
+  //#SECTION decodeFile
+  case "decodeFile": {
     let { inputPath } = await prompt({
       name: "inputPath",
       type: "text",
-      message: "Enter the path to the file containing the text (default: input.txt):",
+      message: "Enter the path to the file containing the blueprint string (default: input.txt):",
     });
 
     if(inputPath === undefined)
       return showMenu();
 
-    if(inputPath.length === 0)
+    if(!inputPath)
       inputPath = "input.txt";
 
-    if(!await exists(inputPath)) {
+    if(!await fileExists(inputPath)) {
       console.error("\n\x1b[31mFile not found or no permission to access it.\x1b[0m\n");
       await pause();
       break;
     }
 
-    let input = await readFile(inputPath, "utf8");
-
-    if(disallowedCharsRegex.test(input)) {
-      console.warn("\x1b[33mWarning:\x1b[0m Some characters in the input text are not supported and will be removed.\nCheck the file 'src/characters.json' for supported characters.");
-      await pause();
-      input = input.replace(disallowedCharsRegex, "");
-    }
-
     let { outputPath } = await prompt({
       name: "outputPath",
       type: "text",
-      message: "Enter the path to save the blueprint (default: output.txt):",
+      message: "Enter the path to save the decoded blueprint (default: output.json):",
     });
 
     if(outputPath === undefined)
       return showMenu();
 
     if(outputPath.length === 0)
-      outputPath = "output.txt";
+      outputPath = "output.json";
 
-    const bp = await createTextPlateBp(input, settings);
-    const encoded = await encodeBp(bp, 48);
+    const input = await readFile(inputPath, "utf8");
+    const decoded = await decodeBp(input);
 
-    await writeFile(outputPath, encoded, "utf8");
-    console.log(`\n\x1b[32mBlueprint created and saved to '${outputPath}'\x1b[0m\n`);
+    if(!decoded) {
+      console.error("\n\x1b[31mFailed to decode blueprint string.\x1b[0m\n");
+      await pause();
+      break;
+    }
+
+    await writeFile(outputPath, JSON.stringify(decoded, null, 2), "utf8");
+    console.log(`\n\x1b[32mBlueprint decoded and saved to ${outputPath}\x1b[0m\n`);
+
     await pause();
     break;
   }
@@ -179,53 +246,6 @@ async function showMenu(): Promise<unknown | void> {
     await pause();
     break;
   }
-  //#SECTION decodeFile
-  case "decodeFile": {
-    let { inputPath } = await prompt({
-      name: "inputPath",
-      type: "text",
-      message: "Enter the path to the file containing the blueprint string (default: input.txt):",
-    });
-
-    if(inputPath === undefined)
-      return showMenu();
-
-    if(!inputPath)
-      inputPath = "input.txt";
-
-    if(!await exists(inputPath)) {
-      console.error("\n\x1b[31mFile not found or no permission to access it.\x1b[0m\n");
-      await pause();
-      break;
-    }
-
-    let { outputPath } = await prompt({
-      name: "outputPath",
-      type: "text",
-      message: "Enter the path to save the decoded blueprint (default: output.json):",
-    });
-
-    if(outputPath === undefined)
-      return showMenu();
-
-    if(outputPath.length === 0)
-      outputPath = "output.json";
-
-    const input = await readFile(inputPath, "utf8");
-    const decoded = await decodeBp(input);
-
-    if(!decoded) {
-      console.error("\n\x1b[31mFailed to decode blueprint string.\x1b[0m\n");
-      await pause();
-      break;
-    }
-
-    await writeFile(outputPath, JSON.stringify(decoded, null, 2), "utf8");
-    console.log(`\n\x1b[32mBlueprint decoded and saved to ${outputPath}\x1b[0m\n`);
-
-    await pause();
-    break;
-  }
   //#SECTION editSettings
   case "editSettings":
     return await showSettingsMenu();
@@ -240,7 +260,7 @@ async function showMenu(): Promise<unknown | void> {
     if(!confirmReset)
       break;
 
-    await writeFile(".text-plate-settings.json", JSON.stringify(defaultSettings, null, 2), "utf8");
+    await writeFile(settingsFilePath, JSON.stringify(defaultSettings, null, 2), "utf8");
     console.log("\n\x1b[32mSuccessfully reset settings to the default values.\x1b[0m\n");
     await pause();
     break;
@@ -313,7 +333,7 @@ async function showSettingsMenu(): Promise<unknown | void> {
       return showSettingsMenu();
 
     settings.size = size;
-    await writeFile(".text-plate-settings.json", JSON.stringify(settings, null, 2), "utf8");
+    await writeFile(settingsFilePath, JSON.stringify(settings, null, 2), "utf8");
 
     console.log("\n\x1b[32mSettings saved.\x1b[0m\n");
     break;
@@ -331,7 +351,7 @@ async function showSettingsMenu(): Promise<unknown | void> {
       return showSettingsMenu();
 
     settings.material = material;
-    await writeFile(".text-plate-settings.json", JSON.stringify(settings, null, 2), "utf8");
+    await writeFile(settingsFilePath, JSON.stringify(settings, null, 2), "utf8");
 
     console.log("\n\x1b[32mSettings saved.\x1b[0m\n");
     break;
@@ -348,7 +368,7 @@ async function showSettingsMenu(): Promise<unknown | void> {
       return showSettingsMenu();
 
     settings.lineSpacing = lineSpacing;
-    await writeFile(".text-plate-settings.json", JSON.stringify(settings, null, 2), "utf8");
+    await writeFile(settingsFilePath, JSON.stringify(settings, null, 2), "utf8");
 
     console.log("\n\x1b[32mSettings saved.\x1b[0m\n");
     break;
@@ -366,7 +386,7 @@ async function showSettingsMenu(): Promise<unknown | void> {
       return showSettingsMenu();
 
     settings.textDirection = textDirection;
-    await writeFile(".text-plate-settings.json", JSON.stringify(settings, null, 2), "utf8");
+    await writeFile(settingsFilePath, JSON.stringify(settings, null, 2), "utf8");
 
     console.log("\n\x1b[32mSettings saved.\x1b[0m\n");
     break;
@@ -384,7 +404,7 @@ async function showSettingsMenu(): Promise<unknown | void> {
       return showSettingsMenu();
 
     settings.maxLineLength = maxLineLength;
-    await writeFile(".text-plate-settings.json", JSON.stringify(settings, null, 2), "utf8");
+    await writeFile(settingsFilePath, JSON.stringify(settings, null, 2), "utf8");
 
     console.log("\n\x1b[32mSettings saved.\x1b[0m\n");
     break;
@@ -402,7 +422,7 @@ async function showSettingsMenu(): Promise<unknown | void> {
       return showSettingsMenu();
 
     settings.bpLabel = bpLabel;
-    await writeFile(".text-plate-settings.json", JSON.stringify(settings, null, 2), "utf8");
+    await writeFile(settingsFilePath, JSON.stringify(settings, null, 2), "utf8");
 
     console.log("\n\x1b[32mSettings saved.\x1b[0m\n");
     break;

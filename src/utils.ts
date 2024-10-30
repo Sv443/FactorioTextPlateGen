@@ -1,4 +1,4 @@
-import { readFile } from "node:fs/promises";
+import { stat } from "node:fs/promises";
 
 /** Shows a "Press any key to continue..." message and waits for a key press until resolving with the key that was pressed */
 export function pause(text = "Press any key to continue...", exitOnCtrlC = true): Promise<string | void> {
@@ -43,11 +43,20 @@ export function pause(text = "Press any key to continue...", exitOnCtrlC = true)
   });
 }
 
-/** Checks if a file exists and is readable */
-export async function exists(filePath: string) {
+/** Checks if the given path exists and is a readable file */
+export async function fileExists(filePath: string) {
   try {
-    await readFile(filePath);
-    return true;
+    return (await stat(filePath)).isFile();
+  }
+  catch {
+    return false;
+  }
+}
+
+/** Checks if the given path exists and is a directory */
+export async function dirExists(dirPath: string) {
+  try {
+    return (await stat(dirPath)).isDirectory();
   }
   catch {
     return false;
