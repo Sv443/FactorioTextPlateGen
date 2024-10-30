@@ -27,6 +27,13 @@ Interactive prompt to generate text plate blueprints for Factorio.
 
 <br>
 
+## Building:
+1. Follow the steps of your system's prerequisites section on [this page](https://github.com/nodejs/node/blob/v20.x/BUILDING.md)
+2. Follow the steps of the [usage section](#usage)
+3. Run `npm run build` to build the executable for all platforms
+
+<br>
+
 <div style="text-align: center;" align="center">
 
 Created with ❤️ by [Sv443](https://github.com/Sv443)  

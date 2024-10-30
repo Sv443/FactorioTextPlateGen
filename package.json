@@ -7,7 +7,9 @@
   "main": "src/index.ts",
   "scripts": {
     "start": "tsx src/index.ts",
-    "test": "tsx test.ts"
+    "dev": "nodemon -I --exec tsx src/index.ts",
+    "test": "tsx test.ts",
+    "build": "tsc && nexe --build -i dist/src/index.js -o dist/factoriotextplategen"
   },
   "author": {
     "name": "Sv443",
@@ -21,6 +23,13 @@
   },
   "devDependencies": {
     "@types/node": "^22.8.4",
-    "@types/prompts": "^2.4.9"
+    "@types/prompts": "^2.4.9",
+    "nexe": "4.0.0-rc.6",
+    "nodemon": "^3.1.7"
+  },
+  "nodemonConfig": {
+    "ignore": ["dist/*"],
+    "watch": ["src"],
+    "ext": "ts,json,js"
   }
 }
