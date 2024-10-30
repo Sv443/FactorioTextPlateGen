@@ -1,6 +1,6 @@
 <div style="text-align: center;" align="center">
 
-# Factorio Text Plate Generator
+# Factorio Text Plate Blueprint Generator
 ### Interactive prompt to generate text plate blueprints for Factorio.
 
 [**Features**](#features) • [**Installation**](#installation) • [**Basic usage**](#basic-usage) • [**Advanced usage**](#advanced-usage) • [**Building**](#building)
