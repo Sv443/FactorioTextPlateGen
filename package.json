@@ -19,8 +19,8 @@
     "build-mac": "tsc && nexe --target macos-x64-14.15.3 -i index.js -o dist/factoriotextplategen"
   },
   "bin": {
-    "factorio-text-plate-gen": "src/cli.js",
-    "factoriotextplategen": "src/cli.js"
+    "factorio-text-plate-gen": "src/cli.mjs",
+    "factoriotextplategen": "src/cli.mjs"
   },
   "author": {
     "name": "Sv443",
