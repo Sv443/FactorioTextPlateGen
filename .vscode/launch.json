@@ -2,10 +2,10 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "name": "index.ts",
+      "name": "Launch",
       "type": "node",
       "request": "launch",
-      "program": "${workspaceFolder}/src/index.ts",
+      "program": "${workspaceFolder}/src/main.ts",
       "runtimeExecutable": "tsx",
       "console": "integratedTerminal",
       "internalConsoleOptions": "neverOpen",
