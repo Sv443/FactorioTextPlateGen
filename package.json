@@ -6,7 +6,7 @@
   "homepage": "https://github.com/Sv443/FactorioTextPlateGen",
   "main": "dist/src/index.js",
   "scripts": {
-    "start": "tsx .",
+    "start": "tsc && tsx .",
     "dev": "nodemon -I --exec pnpm start",
     "watch": "nodemon -I --exec pnpm pre-build",
     "test": "tsx test.ts",
@@ -15,7 +15,7 @@
   },
   "bin": {
     "factorio-text-plate-gen": "src/cli.mjs",
-    "factoriotextplategen": "src/cli.mjs"
+    "textplategen": "src/cli.mjs"
   },
   "author": {
     "name": "Sv443",
@@ -24,6 +24,7 @@
   "license": "MIT",
   "dependencies": {
     "appdata-path": "^1.0.0",
+    "clipboardy": "^4.0.0",
     "prompts": "^2.4.2",
     "tslib": "^2.8.0",
     "typescript": "^5.6.3"

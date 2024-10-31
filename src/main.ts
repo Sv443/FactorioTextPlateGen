@@ -2,6 +2,7 @@ import { mkdir, readFile, writeFile } from "node:fs/promises";
 import { join } from "node:path";
 import prompt from "prompts";
 import appdataPath from "appdata-path";
+import clipboard from "clipboardy";
 import { decodeBp, encodeBp } from "./encoding.js";
 import { createTextPlateBp, defaultGenerateTextPlateBpSettings, disallowedCharsRegex, GenerateTextPlateBpSettings } from "./generator.js";
 import { dirExists, fileExists, pause } from "./utils.js";
@@ -49,6 +50,51 @@ async function init() {
   await writeFile(settingsFilePath, JSON.stringify(settings, null, 2), "utf8");
 
   await showMenu();
+}
+
+//#region misc
+
+/**
+ * Prompts to copy the {@linkcode content} to the clipboard or write it to the file at {@linkcode defaultPath}.  
+ * The {@linkcode name} is used in the prompt message.
+ */
+async function promptCopyOrWriteFile(content: string, name = "Blueprint", defaultPath = "output.txt") {
+  const { action } = await prompt({
+    name: "action",
+    type: "select",
+    message: `What do you want to do with the ${name.toLowerCase()}?`,
+    choices: [
+      { title: "Copy to clipboard", value: "copy" },
+      { title: "Save to a file", value: "writeFile" },
+    ],
+  });
+
+  switch(action) {
+  case "copy":
+    await clipboard.write(content);
+    console.log(`\n\x1b[32m${name} successfully copied to clipboard.\x1b[0m\n`);
+    break;
+  default:
+  case "writeFile": {
+    let { outputPath } = await prompt({
+      name: "outputPath",
+      type: "text",
+      message: `Enter the path to save the ${name.toLowerCase()} (default: ${defaultPath}):`,
+    });
+
+    if(outputPath === undefined)
+      return;
+
+    if(outputPath.length === 0)
+      outputPath = defaultPath;
+
+    await writeFile(outputPath, content, "utf8");
+    console.log(`\n\x1b[32mBlueprint successfully saved to '${outputPath}'\x1b[0m\n`);
+    break;
+  }
+  }
+
+  await pause();
 }
 
 //#region main menu
@@ -104,24 +150,10 @@ async function showMenu(): Promise<unknown | void> {
       input = input.replace(disallowedCharsRegex, "");
     }
 
-    let { outputPath } = await prompt({
-      name: "outputPath",
-      type: "text",
-      message: "Enter the path to save the blueprint (default: output.txt):",
-    });
-
-    if(outputPath === undefined)
-      return showMenu();
-
-    if(outputPath.length === 0)
-      outputPath = "output.txt";
-
     const bp = await createTextPlateBp(input, settings);
     const encoded = await encodeBp(bp, 48);
 
-    await writeFile(outputPath, encoded, "utf8");
-    console.log(`\n\x1b[32mBlueprint created and saved to '${outputPath}'\x1b[0m\n`);
-    await pause();
+    await promptCopyOrWriteFile(encoded);
     break;
   }
   //#SECTION createFromString
@@ -143,23 +175,10 @@ async function showMenu(): Promise<unknown | void> {
       input = input.replace(disallowedCharsRegex, "");
     }
 
-    let { outputPath } = await prompt({
-      name: "outputPath",
-      type: "text",
-      message: "Enter the path to save the blueprint (default: output.txt):",
-    });
-
-    if(outputPath === undefined)
-      return showMenu();
-
-    if(outputPath.length === 0)
-      outputPath = "output.txt";
-
     const bp = await createTextPlateBp(input, settings);
     const encoded = await encodeBp(bp, 48);
-    await writeFile(outputPath, encoded, "utf8");
-    console.log(`\n\x1b[32mBlueprint created and saved to '${outputPath}'\x1b[0m\n`);
-    await pause();
+
+    await promptCopyOrWriteFile(encoded);
     break;
   }
   //#SECTION decodeFile
@@ -182,18 +201,6 @@ async function showMenu(): Promise<unknown | void> {
       break;
     }
 
-    let { outputPath } = await prompt({
-      name: "outputPath",
-      type: "text",
-      message: "Enter the path to save the decoded blueprint (default: output.json):",
-    });
-
-    if(outputPath === undefined)
-      return showMenu();
-
-    if(outputPath.length === 0)
-      outputPath = "output.json";
-
     const input = await readFile(inputPath, "utf8");
     const decoded = await decodeBp(input);
 
@@ -203,10 +210,7 @@ async function showMenu(): Promise<unknown | void> {
       break;
     }
 
-    await writeFile(outputPath, JSON.stringify(decoded, null, 2), "utf8");
-    console.log(`\n\x1b[32mBlueprint decoded and saved to ${outputPath}\x1b[0m\n`);
-
-    await pause();
+    await promptCopyOrWriteFile(JSON.stringify(decoded, undefined, 2), "Decoded blueprint", "output.json");
     break;
   }
   //#SECTION decodeString
@@ -220,18 +224,6 @@ async function showMenu(): Promise<unknown | void> {
     if(input === undefined)
       return showMenu();
 
-    let { outputPath } = await prompt({
-      name: "outputPath",
-      type: "text",
-      message: "Enter the path to save the decoded blueprint (default: output.json):",
-    });
-
-    if(outputPath === undefined)
-      return showMenu();
-
-    if(outputPath.length === 0)
-      outputPath = "output.json";
-
     const decoded = await decodeBp(input);
 
     if(!decoded) {
@@ -240,10 +232,7 @@ async function showMenu(): Promise<unknown | void> {
       break;
     }
 
-    await writeFile(outputPath, JSON.stringify(decoded, null, 2), "utf8");
-    console.log(`\n\x1b[32mBlueprint decoded and saved to ${outputPath}\x1b[0m\n`);
-
-    await pause();
+    await promptCopyOrWriteFile(JSON.stringify(decoded, undefined, 2), "Decoded blueprint", "output.json");
     break;
   }
   //#SECTION editSettings
