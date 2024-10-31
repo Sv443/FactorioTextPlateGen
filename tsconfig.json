@@ -29,7 +29,8 @@
     "strict": true,
   },
   "include": [
-    "src/**/*"
+    "src/**/*",
+    "{,**/}*.(ts|mts|js|mjs|json)"
   ],
   "exclude": [
     "node_modules/**/*",
