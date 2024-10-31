@@ -14,16 +14,17 @@
 <br>
 
 ## Features:
-- Create blueprint from file or text input
-- Decode any blueprint to a JSON file from a file or text input
-- Persistent settings that allow you to specify:
+- Create a blueprint from a text file or string input
+- Persistent settings that allow you to adjust:
   - Text plate material
   - Text plate size
   - Line spacing
   - Text direction
   - Max line length
   - Blueprint name
-- Global command for generating blueprints from and to anywhere on your system
+- Register a global command for generating blueprints from and to anywhere on your system
+- Decode any arbitrary blueprint to a JSON file
+- Write your own code to manipulate blueprints with the provided functions and types
 
 <br>
 
@@ -33,7 +34,7 @@
 3. Run the command `npm i` in the project directory (where the `package.json` file is)
 4. Run `npm start` in the same directory to show the interactive prompt  
   or  
-  Register the global command `factorio-text-plate-gen` by running the command `npm run link` (not `npm link`!) in the project directory
+  Register the global commands `factorio-text-plate-gen` and `textplategen` by running the command `npm run link` (not `npm link`!) in the project directory
 
 > [!NOTE]  
 > - You can also substitute the `npm` command with `pnpm` or `yarn` if you prefer those package managers.  
@@ -46,7 +47,7 @@
 2. Run `npm start` to show the interactive prompt and select `Configure the settings` to adjust the text plate settings.
 3. Go back to the main menu and select `Create text plate blueprint from a file`.
 4. Press enter to use the default file `input.txt` or enter the path to your file.
-5. The blueprint will be saved to a file called `output.txt` in the directory you called the program.
+5. Choose `Copy to clipboard` to copy the blueprint string to your clipboard or `Save to file` to save it to a file (`output.txt` by default).
 
 <br>
 
