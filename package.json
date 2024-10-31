@@ -4,12 +4,13 @@
   "version": "0.1.0",
   "description": "Generates a Factorio text plate blueprint for the given text. Requires the text plates mod.",
   "homepage": "https://github.com/Sv443/FactorioTextPlateGen",
-  "main": "dist/src/index.js",
+  "main": "src/main.ts",
   "scripts": {
-    "start": "tsc && tsx .",
-    "dev": "nodemon -I --exec pnpm start",
-    "watch": "nodemon -I --exec pnpm pre-build",
-    "test": "tsx test.ts",
+    "start": "pnpm run node-ts src/main.ts",
+    "dev": "nodemon -I --exec \"pnpm run pre-build && pnpm start\"",
+    "watch": "nodemon -I --exec \"pnpm run pre-build\"",
+    "node-ts": "node --no-warnings=ExperimentalWarning --enable-source-maps --loader ts-node/esm",
+    "test": "pnpm run node-ts test.ts",
     "link": "pnpm run pre-build && npm link",
     "pre-build": "tsc"
   },
@@ -34,6 +35,7 @@
     "@types/prompts": "^2.4.9",
     "nodemon": "^3.1.7",
     "pnpm": "^9.12.3",
+    "ts-node": "^10.9.2",
     "tsx": "^4.19.2"
   },
   "nodemonConfig": {

@@ -35,4 +35,8 @@
   "exclude": [
     "node_modules/**/*",
   ],
+  "ts-node": {
+    "esm": true,
+    "preferTsExts": false,
+  }
 }

@@ -104,7 +104,7 @@ async function showMenu(): Promise<unknown | void> {
   if(!process.stdin.isTTY)
     throw new Error("This script requires a TTY stdin channel (terminal with input capability).");
 
-  console.log(`\n\n\x1b[34mFactorio Text Plate Blueprint Generator\x1b[0m\n${packageJson.homepage}\n`);
+  console.log(`\n\x1b[34mFactorio Text Plate Blueprint Generator\x1b[0m\n${packageJson.homepage}\n`);
 
   const { action } = await prompt({
     name: "action",
