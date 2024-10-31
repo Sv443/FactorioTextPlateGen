@@ -1,13 +1,13 @@
 <div style="text-align: center;" align="center">
 
 # Factorio Text Plate Blueprint Generator
-### Interactive prompt to generate text plate blueprints for Factorio.
+### Tool that generates text blueprints using the Text Plates mod.
 
 [**Features**](#features) • [**Installation**](#installation) • [**Basic usage**](#basic-usage) • [**Advanced usage**](#advanced-usage)<!-- • [**Building**](#building)-->
 
 <br>
 
-<img src=".github/ingame.png" alt="In-game example" width="800px" />
+<img src=".github/ingame.png" alt="In-game example" />
 
 </div>
 
@@ -44,16 +44,17 @@
 ## Basic usage:
 1. Create a file (`input.txt` by default) in the directory you're starting the program from and write your text in it.  
   You can use all special characters that are defined in [`src/characters.json`](./src/characters.json)
-2. Run `npm start` to show the interactive prompt and select `Configure the settings` to adjust the text plate settings.
-3. Go back to the main menu and select `Create text plate blueprint from a file`.
-4. Press enter to use the default file `input.txt` or enter the path to your file.
-5. Choose `Copy to clipboard` to copy the blueprint string to your clipboard or `Save to file` to save it to a file (`output.txt` by default).
+2. Run `npm start` or `textplategen` to show the interactive prompt.
+3. Select `Configure the settings` to adjust the generation settings to your liking, then go back to the main menu.
+4. Select `Create text plate blueprint from a file` to generate a blueprint from a text file.  
+  You can also select `Create text plate blueprint from a string` to input the text directly via the terminal.
+5. Choose `Copy to clipboard` or `Save to a file` to export the blueprint.
 
 <br>
 
 <div style="text-align: center;" align="center">
 
-<img src=".github/cli.png" alt="CLI interface example" width="600px" />
+<img src=".github/cli.png" alt="CLI interface example" width="650px" />
 
 </div>
 
