@@ -11,8 +11,9 @@
     "watch": "nodemon -I --exec \"pnpm run pre-build\"",
     "node-ts": "node --no-warnings=ExperimentalWarning --enable-source-maps --loader ts-node/esm",
     "test": "pnpm run node-ts test.ts",
-    "link": "pnpm run pre-build && npm link",
-    "pre-build": "tsc"
+    "link": "pnpm run pre-build && pnpm run prepare && npm link",
+    "pre-build": "tsc",
+    "prepare": "pnpm i -g ts-node"
   },
   "bin": {
     "factorio-text-plate-gen": "src/cli.mjs",
