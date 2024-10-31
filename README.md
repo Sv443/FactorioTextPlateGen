@@ -1,7 +1,7 @@
 <div style="text-align: center;" align="center">
 
 # Factorio Text Plate Blueprint Generator
-### Tool that generates text blueprints using the Text Plates mod.
+### Tool that generates Factorio blueprints from text using the Text Plates mod.
 
 [**Features**](#features) • [**Installation**](#installation) • [**Basic usage**](#basic-usage) • [**Advanced usage**](#advanced-usage)<!-- • [**Building**](#building)-->
 
@@ -29,15 +29,15 @@
 <br>
 
 ## Installation:
-1. Install Node.js and npm
-2. Clone or download and extract the repository (green button at the top of the page)
-3. Run the command `npm i` in the project directory (where the `package.json` file is)
-4. Run `npm start` in the same directory to show the interactive prompt  
-  or  
-  Register the global commands `factorio-text-plate-gen` and `textplategen` by running the command `npm run link` (not `npm link`!) in the project directory
+1. Install [Node.js](https://nodejs.org/) and npm if you haven't already.
+2. Clone or download and extract the repository (green button at the top of the page).
+3. Run the command `npm i` in the project directory (where the `package.json` file is).
+4. Run `npm start` in the same directory to show the interactive prompt.  
+  Or:  
+  Register the global commands `factorio-text-plate-gen` and `textplategen` by running the command `npm run link` (not `npm link`!) in the project directory.
 
 > [!NOTE]  
-> - You can also substitute the `npm` command with `pnpm` or `yarn` if you prefer those package managers.  
+> You can also substitute the `npm` command with `pnpm` or `yarn` if you prefer those package managers.  
 
 <br>
 
