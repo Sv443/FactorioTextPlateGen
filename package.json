@@ -2,7 +2,7 @@
   "name": "factoriotextplategen",
   "type": "module",
   "version": "0.1.0",
-  "description": "Tool that generates Factorio blueprints from text using the Text Plates mod.",
+  "description": "Tool that generates Factorio blueprints from any given text using the Text Plates mod.",
   "homepage": "https://github.com/Sv443/FactorioTextPlateGen",
   "main": "src/main.ts",
   "scripts": {

@@ -1,7 +1,7 @@
 <div style="text-align: center;" align="center">
 
 # Factorio Text Plate Blueprint Generator
-### Tool that generates Factorio blueprints from text using the Text Plates mod.
+### Tool that generates Factorio blueprints from any given text using the Text Plates mod.
 
 [**Features**](#features) • [**Installation**](#installation) • [**Basic usage**](#basic-usage) • [**Advanced usage**](#advanced-usage)<!-- • [**Building**](#building)-->
 
