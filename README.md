@@ -3,7 +3,7 @@
 # Factorio Text Plate Blueprint Generator
 ### Interactive prompt to generate text plate blueprints for Factorio.
 
-[**Features**](#features) • [**Installation**](#installation) • [**Basic usage**](#basic-usage) • [**Advanced usage**](#advanced-usage) • [**Building**](#building)
+[**Features**](#features) • [**Installation**](#installation) • [**Basic usage**](#basic-usage) • [**Advanced usage**](#advanced-usage)<!-- • [**Building**](#building)-->
 
 <br>
 
@@ -70,12 +70,12 @@
 - If you know TypeScript, you can create a `test.ts` file in the same directory as the [`package.json`](./package.json) file and run it with `npm run test` to write your own code to generate text plates or encode and decode any blueprint string in various ways.  
   You can also use the [VS Code debugger](https://code.visualstudio.com/docs/nodejs/nodejs-debugging) to debug your code. Select the profile `test.ts`, set breakpoints and then press F5 to start debugging your code.
 
-<br>
+<!-- <br>
 
 ## Building:
 1. Follow the steps of your system's prerequisites section on [this page](https://github.com/nodejs/node/blob/v20.x/BUILDING.md)
 2. Follow the steps of the [usage section](#usage)
-3. Run `npm run build` to build the executable for all platforms
+3. Run `npm run build` to build the executable for all platforms -->
 
 <br>
 
