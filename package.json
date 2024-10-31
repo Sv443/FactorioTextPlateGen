@@ -16,8 +16,8 @@
     "prepare": "pnpm i -g ts-node"
   },
   "bin": {
-    "factorio-text-plate-gen": "src/cli.mjs",
-    "textplategen": "src/cli.mjs"
+    "textplategen": "src/cli.mjs",
+    "tpgen": "src/cli.mjs"
   },
   "author": {
     "name": "Sv443",

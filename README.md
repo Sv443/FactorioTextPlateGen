@@ -27,14 +27,14 @@
 - Write your own code to manipulate blueprints with the provided functions and types
 
 <br>
-
+ 
 ## Installation:
 1. Install [Node.js](https://nodejs.org/) and npm if you haven't already.
 2. Clone or download and extract the repository (green button at the top of the page).
 3. Run the command `npm i` in the project directory (where the `package.json` file is).
 4. Run `npm start` in the same directory to show the interactive prompt.  
   Or:  
-  Register the global commands `factorio-text-plate-gen` and `textplategen` by running the command `npm run link` (not `npm link`!) in the project directory.
+  Register the global commands `textplategen` and `tpgen` by running the command `npm run link` (not `npm link`!) in the project directory.
 
 > [!NOTE]  
 > You can also substitute the `npm` command with `pnpm` or `yarn` if you prefer those package managers.  
@@ -63,10 +63,10 @@
 ## Advanced usage:
 - You can edit the file [`src/characters.json`](./src/characters.json) to adjust which characters in the input text are converted to which text plate variant.  
   Make sure to only add or modify the `replacements` property and leave everything else untouched.
-- You can register custom aliases for `factorio-text-plate-gen` by editing `bin` in [`package.json`](./package.json) and running `npm link` again.
+- You can register custom aliases for `textplategen` by editing `bin` in [`package.json`](./package.json) and running `npm link` again.
 - If you set the max line length setting to any value above 0, the program will automatically split the text into multiple lines if it exceeds the specified length.  
   Note that this will mean line breaks in the input text will be replaced with spaces and then new line breaks will be added wherever the line limit is reached.
-- After running the program once, a folder `factorio-text-plate-gen` will be created in your appdata directory, where settings files will be stored.  
+- After running the program once, a folder `textplategen` will be created in your appdata directory, where settings files will be stored.  
   You can delete this folder to reset everything to the default.
 - If you are interested in the blueprint object structure or want to extend it, check out the file [`src/types.ts`](./src/types.ts) which contains all TS types.  
 - If you know TypeScript, you can create a `test.ts` file in the same directory as the [`package.json`](./package.json) file and run it with `npm run test` to write your own code to generate text plates or encode and decode any blueprint string in various ways.  
