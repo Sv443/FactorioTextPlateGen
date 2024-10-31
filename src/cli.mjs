@@ -6,10 +6,13 @@ import { join } from "node:path";
 const child = spawn("node", [
   "--no-warnings=ExperimentalWarning",
   "--enable-source-maps",
-  "--loader", "ts-node/esm",
+  "--loader=ts-node/esm",
   join(import.meta.dirname, "./main.ts"),
+  "--",
+  `--caller-path=${process.cwd()}`,
 ], {
   stdio: "inherit",
+  cwd: join(import.meta.dirname, "../"),
 });
 
 child.on("exit", (code, signal) => {

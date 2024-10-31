@@ -13,6 +13,14 @@ const { getAppDataPath } = appdataPath;
 
 //#region init
 
+/** Path to the directory from where this script was called */
+const callerPath = process.argv.find((arg) => arg.startsWith("--caller-path="))?.split("=")[1];
+
+/** Returns the path relative to the directory from where this script was called, falls back to the current working directory */
+function getPathRelativeToCaller(path: string) {
+  return join(callerPath ?? process.cwd(), path);
+}
+
 /** Config directory path */
 const projectConfigDir = getAppDataPath("factorio-text-plate-gen");
 /** Settings file path inside the config dir */
@@ -68,11 +76,12 @@ async function promptCopyOrWriteFile(content: string, name = "Blueprint", defaul
       { title: "Save to a file", value: "writeFile" },
     ],
   });
+  br();
 
   switch(action) {
   case "copy":
     await clipboard.write(content);
-    console.log(`\n\x1b[32m${name} successfully copied to clipboard.\x1b[0m\n`);
+    console.log(`\x1b[32m${name} successfully copied to clipboard.\x1b[0m\n`);
     break;
   default:
   case "writeFile": {
@@ -81,6 +90,7 @@ async function promptCopyOrWriteFile(content: string, name = "Blueprint", defaul
       type: "text",
       message: `Enter the path to save the ${name.toLowerCase()} (default: ${defaultPath}):`,
     });
+    br();
 
     if(outputPath === undefined)
       return;
@@ -88,8 +98,8 @@ async function promptCopyOrWriteFile(content: string, name = "Blueprint", defaul
     if(outputPath.length === 0)
       outputPath = defaultPath;
 
-    await writeFile(outputPath, content, "utf8");
-    console.log(`\n\x1b[32mBlueprint successfully saved to '${outputPath}'\x1b[0m\n`);
+    await writeFile(getPathRelativeToCaller(outputPath), content, "utf8");
+    console.log(`\x1b[32mBlueprint successfully saved to '${outputPath}'\x1b[0m\n`);
     break;
   }
   }
@@ -97,14 +107,24 @@ async function promptCopyOrWriteFile(content: string, name = "Blueprint", defaul
   await pause();
 }
 
+/** Writes a single line break to the console */
+function br() {
+  process.stdout.write("\n");
+}
+
 //#region main menu
+
+let firstMenu = true;
 
 /** Shows the interactive main menu */
 async function showMenu(): Promise<unknown | void> {
   if(!process.stdin.isTTY)
     throw new Error("This script requires a TTY stdin channel (terminal with input capability).");
 
-  console.log(`\n\x1b[34mFactorio Text Plate Blueprint Generator\x1b[0m\n${packageJson.homepage}\n`);
+  if(firstMenu) {
+    console.log(`\n\x1b[34mFactorio Text Plate Blueprint Generator\x1b[0m\n${packageJson.homepage}\n`);
+    firstMenu = false;
+  }
 
   const { action } = await prompt({
     name: "action",
@@ -120,6 +140,7 @@ async function showMenu(): Promise<unknown | void> {
       { title: "\x1b[31mExit\x1b[39m", value: "exit" },
     ],
   });
+  br();
 
   switch(action) {
   //#SECTION createFromFile
@@ -129,12 +150,15 @@ async function showMenu(): Promise<unknown | void> {
       type: "text",
       message: "Enter the path to the file containing the text (default: input.txt):",
     });
+    br();
 
     if(inputPath === undefined)
       return showMenu();
 
     if(inputPath.length === 0)
       inputPath = "input.txt";
+
+    inputPath = getPathRelativeToCaller(inputPath);
 
     if(!await fileExists(inputPath)) {
       console.error("\n\x1b[31mFile not found or no permission to access it.\x1b[0m\n");
@@ -163,6 +187,7 @@ async function showMenu(): Promise<unknown | void> {
       type: "text",
       message: "Enter the text you want to create a blueprint from (\\n for line break, Ctrl+C to cancel):",
     });
+    br();
 
     if(!input)
       return showMenu();
@@ -188,12 +213,15 @@ async function showMenu(): Promise<unknown | void> {
       type: "text",
       message: "Enter the path to the file containing the blueprint string (default: input.txt):",
     });
+    br();
 
     if(inputPath === undefined)
       return showMenu();
 
     if(!inputPath)
       inputPath = "input.txt";
+
+    inputPath = getPathRelativeToCaller(inputPath);
 
     if(!await fileExists(inputPath)) {
       console.error("\n\x1b[31mFile not found or no permission to access it.\x1b[0m\n");
@@ -220,6 +248,7 @@ async function showMenu(): Promise<unknown | void> {
       type: "text",
       message: "Enter the blueprint string to decode:",
     });
+    br();
 
     if(input === undefined)
       return showMenu();
@@ -245,12 +274,13 @@ async function showMenu(): Promise<unknown | void> {
       type: "confirm",
       message: "Are you sure you want to reset the settings to the default values?",
     });
+    br();
 
     if(!confirmReset)
       break;
 
     await writeFile(settingsFilePath, JSON.stringify(defaultSettings, null, 2), "utf8");
-    console.log("\n\x1b[32mSuccessfully reset settings to the default values.\x1b[0m\n");
+    console.log("\x1b[33mSuccessfully reset settings to the default values.\x1b[0m\n");
     await pause();
     break;
   }
@@ -307,6 +337,7 @@ async function showSettingsMenu(): Promise<unknown | void> {
       { title: "\x1b[31mGo back\x1b[39m", value: "back" },
     ],
   });
+  br();
 
   switch(setting) {
   //#SECTION size
@@ -317,6 +348,7 @@ async function showSettingsMenu(): Promise<unknown | void> {
       message: "What size should the text plates be? Ctrl+C to cancel.",
       choices: sizeChoices,
     });
+    br();
 
     if(!size)
       return showSettingsMenu();
@@ -324,7 +356,7 @@ async function showSettingsMenu(): Promise<unknown | void> {
     settings.size = size;
     await writeFile(settingsFilePath, JSON.stringify(settings, null, 2), "utf8");
 
-    console.log("\n\x1b[32mSettings saved.\x1b[0m\n");
+    console.log("\x1b[32mSettings successfully saved.\x1b[0m\n");
     break;
   }
   //#SECTION material
@@ -335,6 +367,7 @@ async function showSettingsMenu(): Promise<unknown | void> {
       message: "What material should the text plates be made of? Ctrl+C to cancel.",
       choices: materialChoices,
     });
+    br();
 
     if(!material)
       return showSettingsMenu();
@@ -342,7 +375,7 @@ async function showSettingsMenu(): Promise<unknown | void> {
     settings.material = material;
     await writeFile(settingsFilePath, JSON.stringify(settings, null, 2), "utf8");
 
-    console.log("\n\x1b[32mSettings saved.\x1b[0m\n");
+    console.log("\x1b[32mSettings successfully saved.\x1b[0m\n");
     break;
   }
   //#SECTION lineSpacing
@@ -352,6 +385,7 @@ async function showSettingsMenu(): Promise<unknown | void> {
       type: "number",
       message: "How many tiles of space should be between lines? Negative numbers allow reversing text direction vertically. Ctrl+C to cancel.",
     });
+    br();
 
     if(!lineSpacing && lineSpacing !== 0)
       return showSettingsMenu();
@@ -359,7 +393,7 @@ async function showSettingsMenu(): Promise<unknown | void> {
     settings.lineSpacing = lineSpacing;
     await writeFile(settingsFilePath, JSON.stringify(settings, null, 2), "utf8");
 
-    console.log("\n\x1b[32mSettings saved.\x1b[0m\n");
+    console.log("\x1b[32mSettings successfully saved.\x1b[0m\n");
     break;
   }
   //#SECTION text direction
@@ -370,6 +404,7 @@ async function showSettingsMenu(): Promise<unknown | void> {
       message: "How should the text be aligned horizontally? Ctrl+C to cancel.",
       choices: textDirectionChoices,
     });
+    br();
 
     if(!textDirection)
       return showSettingsMenu();
@@ -377,7 +412,7 @@ async function showSettingsMenu(): Promise<unknown | void> {
     settings.textDirection = textDirection;
     await writeFile(settingsFilePath, JSON.stringify(settings, null, 2), "utf8");
 
-    console.log("\n\x1b[32mSettings saved.\x1b[0m\n");
+    console.log("\x1b[32mSettings successfully saved.\x1b[0m\n");
     break;
   }
   //#SECTION maxLineLength
@@ -388,6 +423,7 @@ async function showSettingsMenu(): Promise<unknown | void> {
       message: "What should the maximum length of a line be? 0 for infinite. Ctrl+C to cancel.",
       min: 0,
     });
+    br();
 
     if(!maxLineLength)
       return showSettingsMenu();
@@ -395,7 +431,7 @@ async function showSettingsMenu(): Promise<unknown | void> {
     settings.maxLineLength = maxLineLength;
     await writeFile(settingsFilePath, JSON.stringify(settings, null, 2), "utf8");
 
-    console.log("\n\x1b[32mSettings saved.\x1b[0m\n");
+    console.log("\x1b[32mSettings successfully saved.\x1b[0m\n");
     break;
   }
   //#SECTION bpLabel
@@ -406,6 +442,7 @@ async function showSettingsMenu(): Promise<unknown | void> {
       message: "What should the blueprint label be? Ctrl+C to cancel.",
       limit: 199,
     });
+    br();
 
     if(!bpLabel)
       return showSettingsMenu();
@@ -413,7 +450,7 @@ async function showSettingsMenu(): Promise<unknown | void> {
     settings.bpLabel = bpLabel;
     await writeFile(settingsFilePath, JSON.stringify(settings, null, 2), "utf8");
 
-    console.log("\n\x1b[32mSettings saved.\x1b[0m\n");
+    console.log("\x1b[32mSettings successfully saved.\x1b[0m\n");
     break;
   }
   //#SECTION default, back
