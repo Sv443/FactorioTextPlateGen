@@ -62,6 +62,8 @@
 - You can edit the file [`src/characters.json`](./src/characters.json) to adjust which characters in the input text are converted to which text plate variant.  
   Make sure to only add or modify the `replacements` property and leave everything else untouched.
 - You can register custom aliases for `factorio-text-plate-gen` by editing `bin` in [`package.json`](./package.json) and running `npm link` again.
+- If you set the max line length setting to any value above 0, the program will automatically split the text into multiple lines if it exceeds the specified length.  
+  Note that this will mean line breaks in the input text will be replaced with spaces and then new line breaks will be added wherever the line limit is reached.
 - After running the program once, a folder `factorio-text-plate-gen` will be created in your appdata directory, where settings files will be stored.  
   You can delete this folder to reset everything to the default.
 - If you are interested in the blueprint object structure or want to extend it, check out the file [`src/types.ts`](./src/types.ts) which contains all TS types.  

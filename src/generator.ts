@@ -124,6 +124,8 @@ export function getTextWithMaxLineLen(text: string, maxLineLength: number) {
   if(maxLineLength <= 0)
     return text;
 
+  text = text.replace(/(\\n|\n)/gm, " ");
+
   const words = text.split(" ");
   let line = "";
   let result = "";

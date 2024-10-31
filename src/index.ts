@@ -291,8 +291,8 @@ const textDirectionChoices: Choice<TextDirection>[] = [
 const materialChoices: Choice<TextPlateMaterial>[] = [
   { title: "Concrete", value: "concrete" },
   { title: "Copper", value: "copper" },
-  { title: "Glass", value: "glass" },
-  { title: "Gold", value: "gold" },
+  { title: "Glass (Stone)", value: "glass" },
+  { title: "Gold (Sulfur)", value: "gold" },
   { title: "Iron", value: "iron" },
   { title: "Plastic", value: "plastic" },
   { title: "Steel", value: "steel" },
