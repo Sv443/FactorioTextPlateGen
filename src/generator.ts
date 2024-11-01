@@ -15,6 +15,8 @@ export type GenerateTextPlateBpSettings = {
   maxLineLength?: number;
   /** Label of the blueprint. Default is `Text plates` */
   bpLabel?: string;
+  /** Whether to preserve newlines in the input text. Default is `false` */
+  preserveLineBreaks?: boolean;
   /** Version of the blueprint. Default is `562949954207746` */
   version?: number;
 };
@@ -26,6 +28,7 @@ export const defaultGenerateTextPlateBpSettings: Required<GenerateTextPlateBpSet
   textDirection: "ltr",
   maxLineLength: 0,
   bpLabel: "Text plates",
+  preserveLineBreaks: false,
   version: 562949954207746,
 } as const;
 
@@ -120,19 +123,19 @@ export async function createTextPlateBp(
  * Returns the given text with a maximum line length applied by inserting newlines.  
  * If the new line breaks are inside a word, they will be moved to the start of the word at the boundary.
  */
-export function getTextWithMaxLineLen(text: string, maxLineLength: number) {
+export function getTextWithMaxLineLen(text: string, maxLineLength: number, preserveLineBreaks = false) {
   if(maxLineLength <= 0)
     return text;
 
-  text = text.replace(/(\\n|\n)/gm, " ");
+  if(!preserveLineBreaks)
+    text = text.replace(/(\\n|\n)/gm, " ");
 
   const words = text.split(" ");
   let line = "";
   let result = "";
   for(const word of words) {
-    if(line.length + word.length + 1 <= maxLineLength) {
+    if(line.length + word.length + 1 <= maxLineLength)
       line += (line.length > 0 ? " " : "") + word;
-    }
     else {
       result += (result.length > 0 ? "\n" : "") + line;
       line = word;

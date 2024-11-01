@@ -11,29 +11,42 @@ import packageJson from "../package.json" with { type: "json" };
 
 const { getAppDataPath } = appdataPath;
 
-//#region init
+//#region types
+
+type Settings = Required<GenerateTextPlateBpSettings>;
+
+type Choice<TValue> = { title: string, value: TValue }
+
+//#region consts
 
 const callerPathRaw = process.argv.find((arg) => arg.includes("caller-path"))?.split("caller-path=")[1];
 /** Path to the directory from where this script was called */
 const callerPath = callerPathRaw && callerPathRaw.length > 0 ? atob(callerPathRaw) : undefined;
 
-/** Returns the path relative to the directory from where this script was called, falls back to the current working directory */
-function getPathRelativeToCaller(path: string) {
-  return join(callerPath ?? process.cwd(), path);
-}
+const defaultSettings: Settings = {
+  ...defaultGenerateTextPlateBpSettings,
+};
 
 /** Config directory path */
 const projectConfigDir = getAppDataPath("factorio-text-plate-gen");
 /** Settings file path inside the config dir */
 const settingsFilePath = join(projectConfigDir, "settings.json");
 
-type Settings = Required<GenerateTextPlateBpSettings>;
-
-const defaultSettings: Settings = {
-  ...defaultGenerateTextPlateBpSettings,
-};
-
 let settings = { ...defaultSettings };
+
+//#region misc
+
+/** Returns the title of the choice with the provided value or falls back to the given value itself */
+function getChoiceVal<TVal extends unknown>(choices: Choice<TVal>[], val: TVal) {
+  return choices.find((c) => c.value === val)?.title ?? val;
+}
+
+/** Returns the path relative to the directory from where this script was called, falls back to the current working directory */
+function getPathRelativeToCaller(path: string) {
+  return join(callerPath ?? process.cwd(), path);
+}
+
+//#region init
 
 async function init() {
   if(!await dirExists(projectConfigDir)) {
@@ -296,8 +309,6 @@ async function showMenu(): Promise<unknown | void> {
 
 //#region settings menu
 
-type Choice<TValue> = { title: string, value: TValue }
-
 const sizeChoices: Choice<TextPlateSize>[] = [
   { title: "Small", value: "small" },
   { title: "Large", value: "large" },
@@ -320,10 +331,13 @@ const materialChoices: Choice<TextPlateMaterial>[] = [
   { title: "Uranium", value: "uranium" },
 ];
 
+const boolChoices: Choice<boolean>[] = [
+  { title: "Yes", value: true },
+  { title: "No", value: false },
+];
+
 /** Shows the interactive settings menu */
 async function showSettingsMenu(): Promise<unknown | void> {
-  const getChoiceVal = (choices: Choice<string>[], val: string) => choices.find((c) => c.value === val)?.title ?? val;
-
   const { setting } = await prompt({
     name: "setting",
     type: "select",
@@ -335,6 +349,7 @@ async function showSettingsMenu(): Promise<unknown | void> {
       { title: `\x1b[1mText direction:\x1b[22m ${getChoiceVal(textDirectionChoices, settings.textDirection)}`, value: "textDirection" },
       { title: `\x1b[1mMax line length:\x1b[22m ${settings.maxLineLength}`, value: "maxLineLength" },
       { title: `\x1b[1mBlueprint label:\x1b[22m ${settings.bpLabel}`, value: "bpLabel" },
+      { title: `\x1b[1mPreserve Line Breaks:\x1b[22m ${getChoiceVal(boolChoices, settings.preserveLineBreaks)}`, value: "preserveLineBreaks" },
       { title: "\x1b[31mGo back\x1b[39m", value: "back" },
     ],
   });
@@ -449,6 +464,25 @@ async function showSettingsMenu(): Promise<unknown | void> {
       return showSettingsMenu();
 
     settings.bpLabel = bpLabel;
+    await writeFile(settingsFilePath, JSON.stringify(settings, null, 2), "utf8");
+
+    console.log("\x1b[32mSettings successfully saved.\x1b[0m\n");
+    break;
+  }
+  //#SECTION preserveLineBreaks
+  case "preserveLineBreaks": {
+    const { preserveLineBreaks } = await prompt({
+      name: "preserveLineBreaks",
+      type: "select",
+      message: "Should the original line breaks be preserved in the input text? Ctrl+C to cancel.",
+      choices: boolChoices,
+    });
+    br();
+
+    if(typeof preserveLineBreaks !== "boolean")
+      return showSettingsMenu();
+
+    settings.preserveLineBreaks = preserveLineBreaks;
     await writeFile(settingsFilePath, JSON.stringify(settings, null, 2), "utf8");
 
     console.log("\x1b[32mSettings successfully saved.\x1b[0m\n");
