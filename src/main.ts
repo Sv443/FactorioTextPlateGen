@@ -28,28 +28,28 @@ const optArgs = argsSepIdx && argsSepIdx >= 0 ? process.argv.slice(argsSepIdx + 
 
 const shortcuts = [
   {
-    aliases: ["createfromfile", "createfrompath", "createpath", "createfile", "file", "path"],
+    aliases: ["createfromfile", "createfile", "file", "f"],
     fn: showCreateFromFile,
   },
   {
-    aliases: ["createfromstring", "createstring", "createtext", "text", "txt"],
+    aliases: ["createfromstring", "createstring", "string", "s"],
     fn: showCreateFromString,
   },
   {
-    aliases: ["decodefile", "decodepath"],
+    aliases: ["decodefile", "df"],
     fn: showDecodeFile,
   },
   {
-    aliases: ["decodestring", "decodetext"],
+    aliases: ["decodestring", "ds"],
     fn: showDecodeString,
   },
   {
-    aliases: ["configuration", "configure", "config", "cfg", "settings"],
+    aliases: ["settings", "configuration", "config", "cfg", "c"],
     fn: showSettingsMenu,
   }
 ];
 
-const shortcutOpt = optArgs.find((arg) => arg.toLowerCase() === shortcuts.flatMap((s) => s.aliases).find((s) => s === arg.toLowerCase()));
+const shortcutOpt = optArgs.find((arg) => arg.toLowerCase().trim() === shortcuts.flatMap((s) => s.aliases).find((s) => s === arg.toLowerCase().trim()));
 
 const defaultSettings: Settings = {
   ...defaultGenerateTextPlateBpSettings,
@@ -381,8 +381,9 @@ async function showSettingsMenu(): Promise<unknown | void> {
       { title: `\x1b[1mText direction:\x1b[22m ${getChoiceVal(textDirectionChoices, settings.textDirection)}`, value: "textDirection" },
       { title: `\x1b[1mMax line length:\x1b[22m ${settings.maxLineLength}`, value: "maxLineLength" },
       { title: `\x1b[1mBlueprint label:\x1b[22m ${settings.bpLabel}`, value: "bpLabel" },
-      { title: `\x1b[1mPreserve Line Breaks:\x1b[22m ${getChoiceVal(boolChoices, settings.preserveLineBreaks)}`, value: "preserveLineBreaks" },
-      { title: "\x1b[31mGo back\x1b[39m", value: "back" },
+      { title: `\x1b[1mPreserve line breaks:\x1b[22m ${getChoiceVal(boolChoices, settings.preserveLineBreaks)}`, value: "preserveLineBreaks" },
+      { title: "\x1b[33mBack to main menu\x1b[39m", value: "back" },
+      ...(shortcutOpt ? [{ title: "\x1b[31mExit\x1b[39m", value: "exit" }] : []),
     ],
   });
   br();
@@ -523,7 +524,10 @@ async function showSettingsMenu(): Promise<unknown | void> {
   //#SECTION default, back
   default:
   case "back":
-    return shortcutOpt ? undefined : showMenu();
+    return showMenu();
+  //#SECTION exit
+  case "exit":
+    return;
   }
   return showSettingsMenu();
 }

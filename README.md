@@ -69,12 +69,12 @@
 - After running the program once, a folder `textplategen` will be created in your appdata directory, where settings files will be stored.  
   You can delete this folder to reset everything to the default.
 - There are shortcuts that automatically select the first option in the main menu.  
-  You can use `textplategen <shortcut>` with one of the following values, case insensitive:
-  - `createfromfile` | `createfrompath` | `createpath` | `createfile` | `file` | `path`
-  - `createfromstring` | `createstring` | `createtext` | `text` | `txt`
-  - `decodefile` | `decodepath`
-  - `decodestring` | `decodetext`
-  - `configuration` | `configure` | `config` | `cfg` | `settings`
+  You can use `textplategen <shortcut>` with any of the following values, case insensitive:
+  - `createfromfile` | `createfile` | `file` | `f`
+  - `createfromstring` | `createstring` | `string` | `s`
+  - `decodefile` | `df`
+  - `decodestring` | `ds`
+  - `settings` | `configuration` | `config` | `cfg` | `c`
 - If you are interested in the blueprint object structure or want to extend it, check out the file [`src/types.ts`](./src/types.ts) which contains all TS types.  
 - If you know TypeScript, you can create a `test.ts` file in the same directory as the [`package.json`](./package.json) file and run it with `npm run test` to write your own code to generate text plates or encode and decode any blueprint string in various ways.  
   You can also use the [VS Code debugger](https://code.visualstudio.com/docs/nodejs/nodejs-debugging) to debug your code. Select the profile `test.ts`, set breakpoints and then press F5 to start debugging your code.
