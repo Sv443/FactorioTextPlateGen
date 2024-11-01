@@ -9,7 +9,7 @@ const child = spawn("node", [
   "--loader=ts-node/esm",
   join(import.meta.dirname, "./main.ts"),
   "--",
-  `--caller-path=${process.cwd()}`,
+  `--caller-path=${btoa(process.cwd())}`,
 ], {
   stdio: "inherit",
   cwd: join(import.meta.dirname, "../"),

@@ -13,8 +13,9 @@ const { getAppDataPath } = appdataPath;
 
 //#region init
 
+const callerPathRaw = process.argv.find((arg) => arg.includes("caller-path"))?.split("caller-path=")[1];
 /** Path to the directory from where this script was called */
-const callerPath = process.argv.find((arg) => arg.startsWith("--caller-path="))?.split("=")[1];
+const callerPath = callerPathRaw && callerPathRaw.length > 0 ? atob(callerPathRaw) : undefined;
 
 /** Returns the path relative to the directory from where this script was called, falls back to the current working directory */
 function getPathRelativeToCaller(path: string) {
