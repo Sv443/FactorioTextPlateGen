@@ -23,6 +23,30 @@ const callerPathRaw = process.argv.find((arg) => arg.includes("caller-path"))?.s
 /** Path to the directory from where this script was called */
 const callerPath = callerPathRaw && callerPathRaw.length > 0 ? atob(callerPathRaw) : undefined;
 
+const pivotIdx = process.argv.findIndex((arg) => arg.includes("--"));
+const optArgs = pivotIdx && pivotIdx >= 0 ? process.argv.slice(pivotIdx + 1) : [...process.argv.slice(2)];
+
+const shortcuts = [
+  {
+    aliases: ["createfromfile", "createfrompath", "createpath", "createfile", "file", "path"],
+    fn: showCreateFromFile,
+  },
+  {
+    aliases: ["createfromstring", "createstring", "createtext", "text", "txt"],
+    fn: showCreateFromString,
+  },
+  {
+    aliases: ["decodefile", "decodepath"],
+    fn: showDecodeFile,
+  },
+  {
+    aliases: ["decodestring", "decodetext"],
+    fn: showDecodeString,
+  },
+];
+
+const shortcutOption = optArgs.find((arg) => arg.toLowerCase() === shortcuts.flatMap((s) => s.aliases).find((s) => s === arg.toLowerCase()));
+
 const defaultSettings: Settings = {
   ...defaultGenerateTextPlateBpSettings,
 };
@@ -49,6 +73,8 @@ function getPathRelativeToCaller(path: string) {
 //#region init
 
 async function init() {
+  console.log(`\n\x1b[34mFactorio Text Plate Blueprint Generator\x1b[0m\n${packageJson.homepage}\n`);
+
   if(!await dirExists(projectConfigDir)) {
     try {
       await mkdir(projectConfigDir, { recursive: true });
@@ -71,7 +97,12 @@ async function init() {
   // always keep settings file in sync with the default values (in case new props get added) and the loaded settings
   await writeFile(settingsFilePath, JSON.stringify(settings, null, 2), "utf8");
 
-  await showMenu();
+  const shortcut = shortcutOption ? shortcuts.find((s) => s.aliases.includes(shortcutOption.toLowerCase())) : undefined;
+
+  if(!shortcut)
+    return await showMenu();
+
+  await shortcut.fn();
 }
 
 //#region misc
@@ -128,17 +159,10 @@ function br() {
 
 //#region main menu
 
-let firstMenu = true;
-
 /** Shows the interactive main menu */
 async function showMenu(): Promise<unknown | void> {
   if(!process.stdin.isTTY)
     throw new Error("This script requires a TTY stdin channel (terminal with input capability).");
-
-  if(firstMenu) {
-    console.log(`\n\x1b[34mFactorio Text Plate Blueprint Generator\x1b[0m\n${packageJson.homepage}\n`);
-    firstMenu = false;
-  }
 
   const { action } = await prompt({
     name: "action",
@@ -157,154 +181,158 @@ async function showMenu(): Promise<unknown | void> {
   br();
 
   switch(action) {
-  //#SECTION createFromFile
-  case "createFromFile": {
-    let { inputPath } = await prompt({
-      name: "inputPath",
-      type: "text",
-      message: "Enter the path to the file containing the text (default: input.txt):",
-    });
-    br();
-
-    if(inputPath === undefined)
-      return showMenu();
-
-    if(inputPath.length === 0)
-      inputPath = "input.txt";
-
-    inputPath = getPathRelativeToCaller(inputPath);
-
-    if(!await fileExists(inputPath)) {
-      console.error("\n\x1b[31mFile not found or no permission to access it.\x1b[0m\n");
-      await pause();
-      break;
-    }
-
-    let input = await readFile(inputPath, "utf8");
-
-    if(disallowedCharsRegex.exec(input)) {
-      console.warn("⚠️ \x1b[33mWarning:\x1b[0m Some characters in the input text are not supported and will be removed.\nCheck the file 'src/characters.json' for supported characters.");
-      await pause();
-      input = input.replace(disallowedCharsRegex, "");
-    }
-
-    const bp = await createTextPlateBp(input, settings);
-    const encoded = await encodeBp(bp, 48);
-
-    await promptCopyOrWriteFile(encoded);
+  case "createFromFile":
+    await showCreateFromFile();
     break;
-  }
-  //#SECTION createFromString
-  case "createFromString": {
-    let { input } = await prompt({
-      name: "input",
-      type: "text",
-      message: "Enter the text you want to create a blueprint from (\\n for line break, Ctrl+C to cancel):",
-    });
-    br();
-
-    if(!input)
-      return showMenu();
-
-    input = input.replace(/\\n/gu, "\n");
-
-    if(disallowedCharsRegex.exec(input)) {
-      console.warn("⚠️ \x1b[33mWarning:\x1b[0m Some characters in the input text are not supported and will be removed.\nCheck the file 'src/characters.json' for supported characters.");
-      await pause();
-      input = input.replace(disallowedCharsRegex, "");
-    }
-
-    const bp = await createTextPlateBp(input, settings);
-    const encoded = await encodeBp(bp, 48);
-
-    await promptCopyOrWriteFile(encoded);
+  case "createFromString":
+    await showCreateFromString();
     break;
-  }
-  //#SECTION decodeFile
-  case "decodeFile": {
-    let { inputPath } = await prompt({
-      name: "inputPath",
-      type: "text",
-      message: "Enter the path to the file containing the blueprint string (default: input.txt):",
-    });
-    br();
-
-    if(inputPath === undefined)
-      return showMenu();
-
-    if(!inputPath)
-      inputPath = "input.txt";
-
-    inputPath = getPathRelativeToCaller(inputPath);
-
-    if(!await fileExists(inputPath)) {
-      console.error("\n\x1b[31mFile not found or no permission to access it.\x1b[0m\n");
-      await pause();
-      break;
-    }
-
-    const input = await readFile(inputPath, "utf8");
-    const decoded = await decodeBp(input);
-
-    if(!decoded) {
-      console.error("\n\x1b[31mFailed to decode blueprint string.\x1b[0m\n");
-      await pause();
-      break;
-    }
-
-    await promptCopyOrWriteFile(JSON.stringify(decoded, undefined, 2), "Decoded blueprint", "output.json");
+  case "decodeFile":
+    await showDecodeFile();
     break;
-  }
-  //#SECTION decodeString
-  case "decodeString": {
-    let { input } = await prompt({
-      name: "input",
-      type: "text",
-      message: "Enter the blueprint string to decode:",
-    });
-    br();
-
-    if(input === undefined)
-      return showMenu();
-
-    const decoded = await decodeBp(input);
-
-    if(!decoded) {
-      console.error("\n\x1b[31mFailed to decode blueprint string.\x1b[0m\n");
-      await pause();
-      break;
-    }
-
-    await promptCopyOrWriteFile(JSON.stringify(decoded, undefined, 2), "Decoded blueprint", "output.json");
+  case "decodeString":
+    await showDecodeString();
     break;
-  }
-  //#SECTION editSettings
   case "editSettings":
     return await showSettingsMenu();
-  //#SECTION resetSettings
-  case "resetSettings": {
-    const { confirmReset } = await prompt({
-      name: "confirmReset",
-      type: "confirm",
-      message: "Are you sure you want to reset the settings to the default values?",
-    });
-    br();
-
-    if(!confirmReset)
-      break;
-
-    await writeFile(settingsFilePath, JSON.stringify(defaultSettings, null, 2), "utf8");
-    console.log("\x1b[33mSuccessfully reset settings to the default values.\x1b[0m\n");
-    await pause();
+  case "resetSettings":
+    await showResetSettings();
     break;
-  }
-  //#SECTION default, exit
   default:
   case "exit":
     setImmediate(() => process.exit(0));
     return;
   }
   return showMenu();
+}
+
+//#region createFromFile
+
+/** Create text plate blueprint from a file */
+async function showCreateFromFile(): Promise<void | unknown> {
+  let { inputPath } = await prompt({
+    name: "inputPath",
+    type: "text",
+    message: "Enter the path to the file containing the text (default: input.txt):",
+  });
+  br();
+
+  if(inputPath === undefined)
+    return shortcutOption ? undefined : showMenu();
+
+  if(inputPath.length === 0)
+    inputPath = "input.txt";
+
+  inputPath = getPathRelativeToCaller(inputPath);
+
+  if(!await fileExists(inputPath)) {
+    console.error("\n\x1b[31mFile not found or no permission to access it.\x1b[0m\n");
+    await pause();
+    return;
+  }
+
+  let input = await readFile(inputPath, "utf8");
+
+  if(disallowedCharsRegex.exec(input)) {
+    console.warn("⚠️ \x1b[33mWarning:\x1b[0m Some characters in the input text are not supported and will be removed.\nCheck the file 'src/characters.json' for supported characters.");
+    await pause();
+    input = input.replace(disallowedCharsRegex, "");
+  }
+
+  const bp = await createTextPlateBp(input, settings);
+  const encoded = await encodeBp(bp, 48);
+
+  await promptCopyOrWriteFile(encoded);
+}
+
+//#region createFromString
+
+/** Create text plate blueprint from a string */
+async function showCreateFromString(): Promise<void | unknown> {
+  let { input } = await prompt({
+    name: "input",
+    type: "text",
+    message: "Enter the text you want to create a blueprint from (\\n for line break, Ctrl+C to cancel):",
+  });
+  br();
+
+  if(!input)
+    return shortcutOption ? undefined : showMenu();;
+
+  input = input.replace(/\\n/gu, "\n");
+
+  if(disallowedCharsRegex.exec(input)) {
+    console.warn("⚠️ \x1b[33mWarning:\x1b[0m Some characters in the input text are not supported and will be removed.\nCheck the file 'src/characters.json' for supported characters.");
+    await pause();
+    input = input.replace(disallowedCharsRegex, "");
+  }
+
+  const bp = await createTextPlateBp(input, settings);
+  const encoded = await encodeBp(bp, 48);
+
+  await promptCopyOrWriteFile(encoded);
+}
+
+//#region decodeFile
+
+/** Decode an arbitrary blueprint from a file */
+async function showDecodeFile(): Promise<void | unknown> {
+  let { inputPath } = await prompt({
+    name: "inputPath",
+    type: "text",
+    message: "Enter the path to the file containing the blueprint string (default: input.txt):",
+  });
+  br();
+
+  if(inputPath === undefined)
+    return shortcutOption ? undefined : showMenu();;
+
+  if(!inputPath)
+    inputPath = "input.txt";
+
+  inputPath = getPathRelativeToCaller(inputPath);
+
+  if(!await fileExists(inputPath)) {
+    console.error("\n\x1b[31mFile not found or no permission to access it.\x1b[0m\n");
+    await pause();
+    return;
+  }
+
+  const input = await readFile(inputPath, "utf8");
+  const decoded = await decodeBp(input);
+
+  if(!decoded) {
+    console.error("\n\x1b[31mFailed to decode blueprint string.\x1b[0m\n");
+    await pause();
+    return;
+  }
+
+  await promptCopyOrWriteFile(JSON.stringify(decoded, undefined, 2), "Decoded blueprint", "output.json");
+}
+
+//#region decodeString
+
+/** Decode an arbitrary blueprint from a string */
+async function showDecodeString(): Promise<void | unknown> {
+  let { input } = await prompt({
+    name: "input",
+    type: "text",
+    message: "Enter the blueprint string to decode:",
+  });
+  br();
+
+  if(input === undefined)
+    return shortcutOption ? undefined : showMenu();
+
+  const decoded = await decodeBp(input);
+
+  if(!decoded) {
+    console.error("\n\x1b[31mFailed to decode blueprint string.\x1b[0m\n");
+    await pause();
+    return;
+  }
+
+  await promptCopyOrWriteFile(JSON.stringify(decoded, undefined, 2), "Decoded blueprint", "output.json");
 }
 
 //#region settings menu
@@ -491,9 +519,28 @@ async function showSettingsMenu(): Promise<unknown | void> {
   //#SECTION default, back
   default:
   case "back":
-    return showMenu();
+    return shortcutOption ? undefined : showMenu();
   }
   return showSettingsMenu();
+}
+
+//#region resetSettings
+
+/** Resets the settings to the default values */
+async function showResetSettings() {
+  const { confirmReset } = await prompt({
+    name: "confirmReset",
+    type: "confirm",
+    message: "Are you sure you want to reset the settings to the default values?",
+  });
+  br();
+
+  if(!confirmReset)
+    return;
+
+  await writeFile(settingsFilePath, JSON.stringify(defaultSettings, null, 2), "utf8");
+  console.log("\x1b[33mSuccessfully reset settings to the default values.\x1b[0m\n");
+  await pause();
 }
 
 init();

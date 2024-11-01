@@ -10,6 +10,7 @@ const child = spawn("node", [
   join(import.meta.dirname, "./main.ts"),
   "--",
   `--caller-path=${btoa(process.cwd())}`,
+  ...process.argv.slice(2),
 ], {
   stdio: "inherit",
   cwd: join(import.meta.dirname, "../"),
