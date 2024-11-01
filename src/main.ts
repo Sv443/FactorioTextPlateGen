@@ -23,8 +23,8 @@ const callerPathRaw = process.argv.find((arg) => arg.includes("caller-path"))?.s
 /** Path to the directory from where this script was called */
 const callerPath = callerPathRaw && callerPathRaw.length > 0 ? atob(callerPathRaw) : undefined;
 
-const pivotIdx = process.argv.findIndex((arg) => arg.includes("--"));
-const optArgs = pivotIdx && pivotIdx >= 0 ? process.argv.slice(pivotIdx + 1) : [...process.argv.slice(2)];
+const argsSepIdx = process.argv.findIndex((arg) => arg.includes("--"));
+const optArgs = argsSepIdx && argsSepIdx >= 0 ? process.argv.slice(argsSepIdx + 1) : [...process.argv.slice(2)];
 
 const shortcuts = [
   {
@@ -43,9 +43,13 @@ const shortcuts = [
     aliases: ["decodestring", "decodetext"],
     fn: showDecodeString,
   },
+  {
+    aliases: ["configuration", "configure", "config", "cfg", "settings"],
+    fn: showSettingsMenu,
+  }
 ];
 
-const shortcutOption = optArgs.find((arg) => arg.toLowerCase() === shortcuts.flatMap((s) => s.aliases).find((s) => s === arg.toLowerCase()));
+const shortcutOpt = optArgs.find((arg) => arg.toLowerCase() === shortcuts.flatMap((s) => s.aliases).find((s) => s === arg.toLowerCase()));
 
 const defaultSettings: Settings = {
   ...defaultGenerateTextPlateBpSettings,
@@ -97,7 +101,7 @@ async function init() {
   // always keep settings file in sync with the default values (in case new props get added) and the loaded settings
   await writeFile(settingsFilePath, JSON.stringify(settings, null, 2), "utf8");
 
-  const shortcut = shortcutOption ? shortcuts.find((s) => s.aliases.includes(shortcutOption.toLowerCase())) : undefined;
+  const shortcut = shortcutOpt ? shortcuts.find((s) => s.aliases.includes(shortcutOpt.toLowerCase())) : undefined;
 
   if(!shortcut)
     return await showMenu();
@@ -149,7 +153,7 @@ async function promptCopyOrWriteFile(content: string, name = "Blueprint", defaul
   }
   }
 
-  await pause();
+  shortcutOpt ? undefined : await pause();
 }
 
 /** Writes a single line break to the console */
@@ -218,7 +222,7 @@ async function showCreateFromFile(): Promise<void | unknown> {
   br();
 
   if(inputPath === undefined)
-    return shortcutOption ? undefined : showMenu();
+    return shortcutOpt ? undefined : showMenu();
 
   if(inputPath.length === 0)
     inputPath = "input.txt";
@@ -257,7 +261,7 @@ async function showCreateFromString(): Promise<void | unknown> {
   br();
 
   if(!input)
-    return shortcutOption ? undefined : showMenu();;
+    return shortcutOpt ? undefined : showMenu();;
 
   input = input.replace(/\\n/gu, "\n");
 
@@ -285,7 +289,7 @@ async function showDecodeFile(): Promise<void | unknown> {
   br();
 
   if(inputPath === undefined)
-    return shortcutOption ? undefined : showMenu();;
+    return shortcutOpt ? undefined : showMenu();;
 
   if(!inputPath)
     inputPath = "input.txt";
@@ -322,7 +326,7 @@ async function showDecodeString(): Promise<void | unknown> {
   br();
 
   if(input === undefined)
-    return shortcutOption ? undefined : showMenu();
+    return shortcutOpt ? undefined : showMenu();
 
   const decoded = await decodeBp(input);
 
@@ -519,7 +523,7 @@ async function showSettingsMenu(): Promise<unknown | void> {
   //#SECTION default, back
   default:
   case "back":
-    return shortcutOption ? undefined : showMenu();
+    return shortcutOpt ? undefined : showMenu();
   }
   return showSettingsMenu();
 }

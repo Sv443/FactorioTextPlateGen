@@ -74,6 +74,7 @@
   - `createfromstring` | `createstring` | `createtext` | `text` | `txt`
   - `decodefile` | `decodepath`
   - `decodestring` | `decodetext`
+  - `configuration` | `configure` | `config` | `cfg` | `settings`
 - If you are interested in the blueprint object structure or want to extend it, check out the file [`src/types.ts`](./src/types.ts) which contains all TS types.  
 - If you know TypeScript, you can create a `test.ts` file in the same directory as the [`package.json`](./package.json) file and run it with `npm run test` to write your own code to generate text plates or encode and decode any blueprint string in various ways.  
   You can also use the [VS Code debugger](https://code.visualstudio.com/docs/nodejs/nodejs-debugging) to debug your code. Select the profile `test.ts`, set breakpoints and then press F5 to start debugging your code.
