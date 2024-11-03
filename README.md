@@ -68,7 +68,7 @@
   By default, your line breaks in the input text will be replaced with spaces and then new line breaks will be added wherever the line limit is reached. Change the setting `Preserve Line Breaks` to `true` to keep the original line breaks.
 - After running the program once, a folder `textplategen` will be created in your appdata directory, where settings files will be stored.  
   You can delete this folder to reset everything to the default.
-- There are shortcuts that automatically select the first option in the main menu.  
+- There are shortcuts that automatically select the first option in the main menu. If one is specified, some confirmations will also be automatically skipped.  
   You can use `textplategen <shortcut>` with any of the following values, case insensitive:
   - `createfromfile` | `createfile` | `file` | `f`
   - `createfromstring` | `createstring` | `string` | `s`
