@@ -1,4 +1,4 @@
-import { stat } from "node:fs/promises";
+import { readFile, stat } from "node:fs/promises";
 
 /** Shows a "Press any key to continue..." message and waits for a key press until resolving with the key that was pressed */
 export function pause(text = "Press any key to continue...", exitOnCtrlC = true): Promise<string | void> {
@@ -46,7 +46,10 @@ export function pause(text = "Press any key to continue...", exitOnCtrlC = true)
 /** Checks if the given path exists and is a readable file */
 export async function fileExists(filePath: string) {
   try {
-    return (await stat(filePath)).isFile();
+    if(!(await stat(filePath)).isFile())
+      return false;
+    await readFile(filePath);
+    return true;
   }
   catch {
     return false;
