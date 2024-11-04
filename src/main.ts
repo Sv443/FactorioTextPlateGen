@@ -156,6 +156,34 @@ async function promptCopyOrWriteFile(content: string, name = "Blueprint", defaul
   shortcutOpt ? undefined : await pause();
 }
 
+/** Prompts for the path to an input file */
+async function promptInputFilePath(inputFileType: string, defaultPath = "input.txt"): Promise<string | void> {
+  let { inputPath } = await prompt({
+    name: "inputPath",
+    type: "text",
+    message: `Enter the path to the file containing the ${inputFileType} (default: ${defaultPath}):`,
+  });
+  br();
+
+  if(inputPath === undefined) {
+    !shortcutOpt && showMenu();
+    return;
+  }
+
+  if(inputPath.length === 0)
+    inputPath = defaultPath;
+
+  inputPath = getPathRelativeToCaller(inputPath);
+
+  if(!await fileExists(inputPath)) {
+    console.error("\n\x1b[31mFile not found or no permission to access it.\x1b[0m\n");
+    await pause();
+    return;
+  }
+
+  return inputPath;
+}
+
 /** Writes a single line break to the console */
 function br() {
   process.stdout.write("\n");
@@ -214,24 +242,10 @@ async function showMenu(): Promise<unknown | void> {
 
 /** Create text plate blueprint from a file */
 async function showCreateFromFile(): Promise<void | unknown> {
-  let { inputPath } = await prompt({
-    name: "inputPath",
-    type: "text",
-    message: "Enter the path to the file containing the text (default: input.txt):",
-  });
-  br();
+  const inputPath = await promptInputFilePath("text");
 
-  if(inputPath === undefined)
-    return shortcutOpt ? undefined : showMenu();
-
-  if(inputPath.length === 0)
-    inputPath = "input.txt";
-
-  inputPath = getPathRelativeToCaller(inputPath);
-
-  if(!await fileExists(inputPath)) {
-    console.error("\n\x1b[31mFile not found or no permission to access it.\x1b[0m\n");
-    await pause();
+  if(!inputPath) {
+    !shortcutOpt && showMenu();
     return;
   }
 
@@ -281,24 +295,10 @@ async function showCreateFromString(): Promise<void | unknown> {
 
 /** Decode an arbitrary blueprint from a file */
 async function showDecodeFile(): Promise<void | unknown> {
-  let { inputPath } = await prompt({
-    name: "inputPath",
-    type: "text",
-    message: "Enter the path to the file containing the blueprint string (default: input.txt):",
-  });
-  br();
+  const inputPath = await promptInputFilePath("blueprint string");
 
-  if(inputPath === undefined)
-    return shortcutOpt ? undefined : showMenu();;
-
-  if(!inputPath)
-    inputPath = "input.txt";
-
-  inputPath = getPathRelativeToCaller(inputPath);
-
-  if(!await fileExists(inputPath)) {
-    console.error("\n\x1b[31mFile not found or no permission to access it.\x1b[0m\n");
-    await pause();
+  if(!inputPath) {
+    !shortcutOpt && showMenu();
     return;
   }
 
