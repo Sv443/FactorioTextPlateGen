@@ -7,7 +7,9 @@
 
 <br>
 
-<img src=".github/ingame.png" alt="In-game example" />
+<a href=".github/ingame_hq.png">
+  <img src=".github/ingame.jpg" alt="In-game example" />
+</a>
 
 </div>
 
