@@ -4,5 +4,4 @@ dist/
 input.txt
 output.txt
 output.json
-factorio-text-plate-gen-settings.json
 test.ts
