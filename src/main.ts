@@ -21,7 +21,7 @@ type Choice<TValue> = { title: string, value: TValue }
 
 const callerPathRaw = process.argv.find((arg) => arg.includes("caller-path"))?.split("caller-path=")[1];
 /** Path to the directory from where this script was called */
-const callerPath = callerPathRaw && callerPathRaw.length > 0 ? atob(callerPathRaw) : undefined;
+const callerPath = callerPathRaw && callerPathRaw.length > 0 ? decodeURIComponent(atob(callerPathRaw)) : undefined;
 
 const argsSepIdx = process.argv.findIndex((arg) => arg.includes("--"));
 const optArgs = argsSepIdx && argsSepIdx >= 0 ? process.argv.slice(argsSepIdx + 1) : [...process.argv.slice(2)];
@@ -76,7 +76,7 @@ function getPathRelativeToCaller(path: string) {
 
 //#region init
 
-async function init() {
+async function init(): Promise<unknown | void> {
   console.log(`\n\x1b[34mFactorio Text Plate Blueprint Generator\x1b[0m\n${packageJson.homepage}\n`);
 
   if(!await dirExists(projectConfigDir)) {
@@ -103,23 +103,23 @@ async function init() {
 
   const shortcut = shortcutOpt ? shortcuts.find((s) => s.aliases.includes(shortcutOpt.toLowerCase())) : undefined;
 
-  if(!shortcut)
-    return await showMenu();
+  if(shortcut)
+    return await shortcut.fn();
 
-  await shortcut.fn();
+  return await showMenu();
 }
 
-//#region misc
+//#region misc prompts
 
 /**
- * Prompts to copy the {@linkcode content} to the clipboard or write it to the file at {@linkcode defaultPath}.  
- * The {@linkcode name} is used in the prompt message.
+ * Prompts to copy the {@linkcode content} to the clipboard or write it to the file at the prompted path or {@linkcode defaultPath}.  
+ * The {@linkcode uppercaseName} is used in the prompt message.
  */
-async function promptCopyOrWriteFile(content: string, name = "Blueprint", defaultPath = "output.txt") {
+async function promptCopyOrWriteFile(content: string, uppercaseName = "Blueprint", defaultPath = "output.txt"): Promise<void> {
   const { action } = await prompt({
     name: "action",
     type: "select",
-    message: `What do you want to do with the ${name.toLowerCase()}?`,
+    message: `What do you want to do with the ${uppercaseName.toLowerCase()}?`,
     choices: [
       { title: "Copy to clipboard", value: "copy" },
       { title: "Save to a file", value: "writeFile" },
@@ -130,14 +130,14 @@ async function promptCopyOrWriteFile(content: string, name = "Blueprint", defaul
   switch(action) {
   case "copy":
     await clipboard.write(content);
-    console.log(`\x1b[32m${name} successfully copied to clipboard.\x1b[0m\n`);
+    console.log(`\x1b[32m${uppercaseName} successfully copied to clipboard.\x1b[0m\n`);
     break;
   default:
   case "writeFile": {
     let { outputPath } = await prompt({
       name: "outputPath",
       type: "text",
-      message: `Enter the path to save the ${name.toLowerCase()} (default: ${defaultPath}):`,
+      message: `Enter the path to save the ${uppercaseName.toLowerCase()} (default: ${defaultPath}):`,
     });
     br();
 

@@ -147,8 +147,8 @@ export function getTextWithMaxLineLen(text: string, maxLineLength: number, prese
 }
 
 /** Tries to resolve the 1-indexed variant number from the passed character */
-export function resolveTextPlateVariant(character: string): number {
+export function resolveTextPlateVariant(char: string): number {
   return Object.entries(characters).find(
-    ([_, value]) => value.char === character || ("replacements" in value && value.replacements.includes(character))
+    ([_, value]) => value.char === char || ("replacements" in value && value.replacements.includes(char))
   )?.[1].variant ?? characters["Cog"].variant;
 }
