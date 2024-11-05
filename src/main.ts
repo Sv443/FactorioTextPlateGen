@@ -458,7 +458,7 @@ async function showSettingsMenu(): Promise<unknown | void> {
     });
     br();
 
-    if(!lineSpacing && lineSpacing !== 0)
+    if(typeof lineSpacing !== "number" || isNaN(lineSpacing))
       return showSettingsMenu();
 
     await saveNewValue("lineSpacing", lineSpacing);
@@ -490,7 +490,7 @@ async function showSettingsMenu(): Promise<unknown | void> {
     });
     br();
 
-    if(!maxLineLength)
+    if(typeof maxLineLength !== "number" || isNaN(maxLineLength))
       return showSettingsMenu();
 
     await saveNewValue("maxLineLength", maxLineLength);
