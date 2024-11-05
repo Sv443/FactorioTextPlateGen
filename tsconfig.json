@@ -3,12 +3,14 @@
     "baseUrl": ".",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "target": "ES6",
+    "target": "ES2023",
     "outDir": "dist",
     "useDefineForClassFields": true,
     "lib": [
       "ES5",
       "ES6",
+      "ES2022",
+      "ES2023",
       "DOM",
       "DOM.Iterable"
     ],
