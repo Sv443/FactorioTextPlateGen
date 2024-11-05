@@ -68,25 +68,32 @@
 - You can register custom aliases for `textplategen` by editing `bin` in [`package.json`](./package.json) and running `npm link` again.
 - If you set the max line length setting to any value above 0, the program will automatically split the text into multiple lines if it exceeds the specified length.  
   By default, your line breaks in the input text will be replaced with spaces and then new line breaks will be added wherever the line limit is reached. Change the setting `Preserve Line Breaks` to `true` to keep the original line breaks.
-- After running the program once, a folder `textplategen` will be created in your appdata directory, where settings files will be stored.  
-  You can delete this folder to reset everything to the default.
-- There are shortcuts that automatically select the first option in the main menu. If one is specified, some confirmations will also be automatically skipped.  
-  You can use `textplategen <shortcut>` with any of the following values, case insensitive:
+- There are shortcuts that will automatically select an option in the main menu and skip some extra confirmations automatically.  
+  Use `textplategen <shortcut>` (or `tpgen <shortcut>`) with any of the following case-insensitive values:
   - `createfromfile` | `createfile` | `file` | `f`
   - `createfromstring` | `createstring` | `string` | `s`
   - `decodefile` | `df`
   - `decodestring` | `ds`
   - `settings` | `configuration` | `config` | `cfg` | `c`
+- After running the program once, a folder `textplategen` will be created in your appdata directory, where settings files will be stored.  
+  Delete this folder to reset everything to the default.  
+  The locations of this folder are:  
+  - Windows: `C:\Users\<USER>\AppData\Roaming\factorio-text-plate-gen\`  
+  - Linux: `/home/<USER>/.config/factorio-text-plate-gen/`  
+  - Mac: `/Users/<USER>/Library/Application Support/factorio-text-plate-gen/`
+  - Custom: if the environment variable `APPDATA` is set on every launch, the path will be `<APPDATA>/factorio-text-plate-gen/`
 - If you are interested in the blueprint object structure or want to extend it, check out the file [`src/types.ts`](./src/types.ts) which contains all TS types.  
 - If you know TypeScript, you can create a `test.ts` file in the same directory as the [`package.json`](./package.json) file and run it with `npm run test` to write your own code to generate text plates or encode and decode any blueprint string in various ways.  
   You can also use the [VS Code debugger](https://code.visualstudio.com/docs/nodejs/nodejs-debugging) to debug your code. Select the profile `test.ts`, set breakpoints and then press F5 to start debugging your code.
 
-<!-- <br>
+<!--
+<br>
 
 ## Building:
 1. Follow the steps of your system's prerequisites section on [this page](https://github.com/nodejs/node/blob/v20.x/BUILDING.md)
 2. Follow the steps of the [usage section](#usage)
-3. Run `npm run build` to build the executable for all platforms -->
+3. Run `npm run build` to build the executable for all platforms
+-->
 
 <br>
 
