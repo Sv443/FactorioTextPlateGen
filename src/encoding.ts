@@ -39,18 +39,16 @@ export async function decodeBp(blueprint: string): Promise<({ version: number } 
     try {
       const bpData = JSON.parse(inflated);
       if(!("blueprint" in bpData))
-        throw new Error("Blueprint string does not contain valid blueprint data.");
+        throw new Error("Encoded string does not contain any blueprint data.");
 
       return { version, ...bpData };
     }
     catch(err) {
-      //@ts-ignore
-      throw new Error("Failed to parse blueprint data.", { cause: err });
+      throw new Error("Failed to parse decoded blueprint data.", { cause: err });
     }
   }
   catch(err) {
-    //@ts-ignore
-    throw new Error("Failed to decode blueprint string.", { cause: err });
+    throw new Error("Failed to decode blueprint.", { cause: err });
   }
 }
 
@@ -85,7 +83,6 @@ export async function encodeBp(bp: FactorioBP, version: number): Promise<string>
     return String.fromCharCode(version) + deflated;
   }
   catch(err) {
-    //@ts-ignore
     throw new Error("Failed to encode blueprint data.", { cause: err });
   }
 }

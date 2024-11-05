@@ -16,9 +16,11 @@ const child = spawn("node", [
   cwd: join(import.meta.dirname, "../"),
 });
 
-child.on("exit", (code, signal) => {
-  if(code)
-    setImmediate(() => process.exit(code));
-  else if(signal)
-    setImmediate(() => process.kill(process.pid, signal));
-});
+child.on("exit", (code, signal) =>
+  setImmediate(() => {
+    if(code)
+      process.exit(code);
+    else if(signal)
+      process.kill(process.pid, signal);
+  })
+);

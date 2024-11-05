@@ -9,11 +9,11 @@ export function pause(text = "Press any key to continue...", exitOnCtrlC = true)
     process.stdout.write(`${text} `);
     process.stdin.resume();
 
-    let onData = (chunk: string) => {
+    const onData = (chunk: string) => {
       // exit on Ctrl+C
       if(/\u0003/gu.test(chunk)) { // eslint-disable-line no-control-regex
         if(exitOnCtrlC)
-          setImmediate(() => process.exit(0));
+          return schedExit();
         else
           return resolve();
       }
@@ -29,7 +29,7 @@ export function pause(text = "Press any key to continue...", exitOnCtrlC = true)
       return resolve(chunk.toString());
     }
 
-    let onError = (err: unknown) => {
+    const onError = (err: unknown) => {
       process.stdin.removeListener("data", onData);
       process.stdin.removeListener("error", onError);
 
@@ -43,8 +43,8 @@ export function pause(text = "Press any key to continue...", exitOnCtrlC = true)
   });
 }
 
-/** Checks if the given path exists and is a readable file */
-export async function fileExists(filePath: string) {
+/** Checks if the given path exists, is a file and is readable by the process */
+export async function fileReadable(filePath: string) {
   try {
     if(!(await stat(filePath)).isFile())
       return false;
@@ -64,4 +64,9 @@ export async function dirExists(dirPath: string) {
   catch {
     return false;
   }
+}
+
+/** Schedules a process exit with the given code in the macrotask queue (after all promises and I/O callbacks are processed) */
+export function schedExit(code = 0) {
+  setImmediate(() => process.exit(code));
 }
