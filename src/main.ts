@@ -238,7 +238,7 @@ async function showMenu(): Promise<unknown | void> {
     break;
   default:
   case "exit":
-    return schedExit(1);
+    return schedExit();
   }
   return showMenu();
 }
@@ -280,7 +280,7 @@ async function showCreateFromString(): Promise<void | unknown> {
   br();
 
   if(!input)
-    return shortcutOpt ? undefined : showMenu();;
+    return shortcutOpt ? undefined : showMenu();
 
   input = input.replace(/\\n/gu, "\n");
 
