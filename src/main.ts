@@ -169,10 +169,8 @@ async function promptInputFilePath(inputFileType: string, defaultPath = "input.t
   });
   br();
 
-  if(inputPath === undefined) {
-    !shortcutOpt && showMenu();
-    return;
-  }
+  if(inputPath === undefined)
+    return shortcutOpt && schedExit();
 
   if(inputPath.length === 0)
     inputPath = defaultPath;
@@ -240,6 +238,8 @@ async function showMenu(): Promise<unknown | void> {
   case "exit":
     return schedExit();
   }
+  if(shortcutOpt)
+    return schedExit();
   return showMenu();
 }
 
@@ -249,10 +249,8 @@ async function showMenu(): Promise<unknown | void> {
 async function showCreateFromFile(): Promise<void | unknown> {
   const inputPath = await promptInputFilePath("text");
 
-  if(!inputPath) {
-    !shortcutOpt && showMenu();
-    return;
-  }
+  if(!inputPath)
+    return shortcutOpt && schedExit();
 
   let input = await readFile(inputPath, "utf8");
 
@@ -280,7 +278,7 @@ async function showCreateFromString(): Promise<void | unknown> {
   br();
 
   if(!input)
-    return shortcutOpt ? undefined : showMenu();
+    return shortcutOpt && schedExit();
 
   input = input.replace(/\\n/gu, "\n");
 
@@ -316,10 +314,8 @@ async function showDecodeFile(): Promise<void | unknown> {
   try {
     const inputPath = await promptInputFilePath("blueprint string");
 
-    if(!inputPath) {
-      !shortcutOpt && showMenu();
-      return;
-    }
+    if(!inputPath)
+      return shortcutOpt && schedExit();
 
     const input = await readFile(inputPath, "utf8");
     const decoded = await decodeBp(input);
@@ -404,6 +400,7 @@ async function showSettingsMenu(): Promise<unknown | void> {
       { title: `${k.bold("Max line length:")} ${settings.maxLineLength}`, value: "maxLineLength" },
       { title: `${k.bold("Blueprint label:")} ${settings.bpLabel}`, value: "bpLabel" },
       { title: `${k.bold("Preserve line breaks:")} ${getChoiceVal(boolChoices, settings.preserveLineBreaks)}`, value: "preserveLineBreaks" },
+      { title: k.blue("Show settings file path"), value: "showSettingsFilePath" },
       { title: k.yellow("Back to main menu"), value: "back" },
       ...(shortcutOpt ? [{ title: k.red("Exit"), value: "exit" }] : []),
     ],
@@ -528,6 +525,11 @@ async function showSettingsMenu(): Promise<unknown | void> {
     await saveNewValue("preserveLineBreaks", preserveLineBreaks);
     break;
   }
+  //#SECTION show settings file path
+  case "showSettingsFilePath":
+    console.log(`${k.blue("The settings file is located here:")}\n${settingsFilePath}\n`);
+    await pause();
+    break;
   //#SECTION default, back
   default:
   case "back":

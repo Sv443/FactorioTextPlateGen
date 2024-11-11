@@ -26,6 +26,7 @@ export function pause(text = "Press any key to continue...", exitOnCtrlC = true)
 
       process.stdin.setRawMode(initialRaw);
 
+      process.stdout.write("\n");
       return resolve(chunk.toString());
     }
 
