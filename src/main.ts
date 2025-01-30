@@ -260,10 +260,8 @@ async function showCreateFromFile(): Promise<void | unknown> {
     input = input.replace(disallowedCharsRegex, "");
   }
 
-  const bp = await createTextPlateBp(input, settings);
-  const encoded = await encodeBp(bp, 48);
-
-  await promptCopyOrWriteFile(encoded);
+  const bp = await encodeBp(createTextPlateBp(input, settings), 48);
+  await promptCopyOrWriteFile(bp);
 }
 
 //#region createFromString
@@ -288,10 +286,8 @@ async function showCreateFromString(): Promise<void | unknown> {
     input = input.replace(disallowedCharsRegex, "");
   }
 
-  const bp = await createTextPlateBp(input, settings);
-  const encoded = await encodeBp(bp, 48);
-
-  await promptCopyOrWriteFile(encoded);
+  const bp = await encodeBp(createTextPlateBp(input, settings), 48);
+  await promptCopyOrWriteFile(bp);
 }
 
 //#region decodeFile

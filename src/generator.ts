@@ -47,10 +47,10 @@ export const disallowedCharsRegex = new RegExp(`[^${getAllowedCharsEscaped()}]`,
 export const allowedCharsRegex = new RegExp(`^[${getAllowedCharsEscaped()}]$`, "gmi");
 
 /** Creates a Factorio blueprint object from the input text with the provided settings */
-export async function createTextPlateBp(
+export function createTextPlateBp(
   text: string,
   settings: GenerateTextPlateBpSettings = defaultGenerateTextPlateBpSettings,
-): Promise<FactorioBP> {
+): FactorioBP {
   const {
     size,
     material,
