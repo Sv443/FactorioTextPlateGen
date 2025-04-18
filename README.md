@@ -75,7 +75,7 @@
   - `decodefile` | `df`
   - `decodestring` | `ds`
   - `settings` | `configuration` | `config` | `cfg` | `c`
-- After running the program once, a folder `textplategen` will be created in your appdata directory, where settings files will be stored.  
+- After running the program once, a `factorio-text-plate-gen` folder will be created in your appdata directory, where settings files will be stored.  
   Delete this folder to reset everything to the default.  
   The locations of this folder are:  
   - Windows: `C:\Users\<USER>\AppData\Roaming\factorio-text-plate-gen\`  
