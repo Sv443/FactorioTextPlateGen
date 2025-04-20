@@ -33,10 +33,10 @@
 ## Installation:
 1. Install [Node.js](https://nodejs.org/) and npm if you haven't already.
 2. Clone or download and extract the repository (green button at the top of the page).
-3. Run the command `npm i` in the project directory (where the `package.json` file is).
+3. Open a terminal in the project directory (where the `package.json` file is) and run the command `npm i`
 4. Run `npm start` in the same directory to show the interactive prompt.  
   Or:  
-  Register the global commands `textplategen` and `tpgen` by running the command `npm run link` (not `npm link`!) in the project directory.
+  Register the global commands `textplategen` and `tpgen` by running the command `npm run global` in the project directory.
 
 > [!NOTE]  
 > You can also substitute the `npm` command with `pnpm` or `yarn` if you prefer those package managers.  
@@ -65,7 +65,7 @@
 ## Advanced usage:
 - You can edit the file [`src/characters.json`](./src/characters.json) to adjust which characters in the input text are converted to which text plate variant.  
   Make sure to only add or modify the `replacements` property and leave everything else untouched.
-- You can register custom aliases for `textplategen` by editing `bin` in [`package.json`](./package.json) and running `npm link` again.
+- You can register custom aliases for `textplategen` by editing `bin` in [`package.json`](./package.json) and running `npm run global` again.
 - If you set the max line length setting to any value above 0, the program will automatically split the text into multiple lines if it exceeds the specified length.  
   By default, your line breaks in the input text will be replaced with spaces and then new line breaks will be added wherever the line limit is reached. Change the setting `Preserve Line Breaks` to `true` to keep the original line breaks.
 - There are shortcuts that will automatically select an option in the main menu and skip some extra confirmations automatically.  
