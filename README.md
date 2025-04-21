@@ -38,7 +38,7 @@
   Or:  
   Register the global commands `textplategen` and `tpgen` by running the command `npm run global` in the project directory.  
   Or:  
-  Execute one of the `start` files in the project directory. `start.bat` or `start.ps1` for Windows, `start.sh` for Linux and Mac.
+  Execute one of the `start` files in the project directory. `start.cmd` or `start.ps1` for Windows, `start.sh` for Linux and Mac.
 
 > [!NOTE]  
 > You can also substitute the `npm` command with `pnpm` or `yarn` if you prefer those package managers.  
