@@ -36,7 +36,9 @@
 3. Open a terminal in the project directory (where the `package.json` file is) and run the command `npm i`
 4. Run `npm start` in the same directory to show the interactive prompt.  
   Or:  
-  Register the global commands `textplategen` and `tpgen` by running the command `npm run global` in the project directory.
+  Register the global commands `textplategen` and `tpgen` by running the command `npm run global` in the project directory.  
+  Or:  
+  Execute one of the `start` files in the project directory. `start.bat` or `start.ps1` for Windows, `start.sh` for Linux and Mac.
 
 > [!NOTE]  
 > You can also substitute the `npm` command with `pnpm` or `yarn` if you prefer those package managers.  
@@ -46,7 +48,7 @@
 ## Basic usage:
 1. Create a file (`input.txt` by default) in the directory you're starting the program from and write your text in it.  
   You can use all special characters that are defined in [`src/characters.json`](./src/characters.json)
-2. Run `npm start` or `textplategen` to show the interactive prompt.
+2. Run `npm start` or `textplategen` or execute one of the `start` files to show the interactive prompt.
 3. Select `Configure the settings` to adjust the generation settings to your liking, then go back to the main menu.
 4. Select `Create text plate blueprint from a file` to generate a blueprint from a text file.  
   You can also select `Create text plate blueprint from a string` to input the text directly via the terminal.
